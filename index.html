@@ -486,17 +486,24 @@
           </button>
         </div>
 
-        <!-- Instant Voter Search Bar on Home Screen (Just like Video) -->
-        <div class="mt-4 flex items-center gap-2">
-          <div class="relative flex-1">
-            <input type="text" id="homeQuickSearchInput" placeholder="मतदाता नाम, पिता का नाम, मकान या EPIC खोजें..." class="w-full pl-4 pr-10 py-3 text-sm font-semibold rounded-2xl border-2 border-purple-200 focus:border-purple-600 focus:outline-none bg-slate-50/60">
-            <button type="button" id="btnHomeQuickSearchGo" class="absolute right-3 top-1/2 -translate-y-1/2 text-purple-700 hover:text-purple-900">
-              <i data-lucide="search" class="w-5 h-5"></i>
+        <!-- Instant Trilingual Voter Search Bar on Home Screen (Hindi + English + Hinglish) -->
+        <div class="mt-4 relative">
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1 flex items-center">
+              <input type="text" id="homeQuickSearchInput" placeholder="हिंदी, English या Hinglish में नाम, पिता, मकान या EPIC खोजें (जैसे: Ramkishan, Meena, रामकिशन)..." class="w-full pl-4 pr-24 py-3 text-xs sm:text-sm font-semibold rounded-2xl border-2 border-purple-200 focus:border-purple-600 focus:outline-none bg-slate-50/80">
+              <button type="button" id="btnHomeQuickSearchGo" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl korum-btn text-xs font-extrabold flex items-center gap-1 shadow-sm">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i> खोजें
+              </button>
+            </div>
+            <button type="button" onclick="openAdvanceSearchModal()" class="p-3 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white shadow-md shrink-0" title="उन्नत खोज (Advance Voter Search)">
+              <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
             </button>
           </div>
-          <button type="button" onclick="openAdvanceSearchModal()" class="p-3 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white shadow-md shrink-0" title="उन्नत खोज (Advance Voter Search)">
-            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
-          </button>
+          <div class="mt-1 flex items-center justify-between px-1 text-[11px] text-slate-500">
+            <span>🔤 <strong>Smart Search:</strong> आप <strong>हिंदी</strong> (रामकिशन), <strong>English</strong> (Ram Kishan) या <strong>Hinglish</strong> (Ramkishan / Berwa / Mina) किसी में भी टाइप कर सकते हैं।</span>
+          </div>
+          <!-- Live Instant Trilingual Search Results Dropdown on Home Screen -->
+          <div id="homeLiveSearchDropdown" class="hidden mt-2 bg-white rounded-2xl shadow-2xl border-2 border-purple-300 max-h-80 overflow-y-auto divide-y divide-slate-100 z-30"></div>
         </div>
       </div>
 
@@ -619,11 +626,13 @@
       <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/90 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
         <div class="sm:col-span-4">
           <label class="flex items-center gap-1 text-xs font-bold text-slate-600 mb-1">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-blue-600"></i> परिवार / मुखिया / मकान नंबर खोजें
+            <i data-lucide="search" class="w-3.5 h-3.5 text-blue-600"></i> परिवार / मुखिया खोजें (हिंदी, English या Hinglish)
           </label>
-          <div class="relative">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-            <input type="text" id="famSearchInput" placeholder="मुखिया का नाम, मकान नं., या सदस्य..." class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+          <div class="relative flex items-center">
+            <input type="text" id="famSearchInput" placeholder="जैसे: विनोद, Vinod, Meena, Bairwa, मकान 14..." class="w-full pl-3.5 pr-20 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+            <button type="button" id="btnFamSearchGo" onclick="renderFamilies()" class="absolute right-1 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-blue-700 hover:bg-blue-600 text-white text-xs font-extrabold flex items-center gap-1">
+              🔍 खोजें
+            </button>
           </div>
         </div>
         <div class="sm:col-span-2">
@@ -683,11 +692,13 @@
       <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/90 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
         <div class="sm:col-span-4">
           <label class="flex items-center gap-1 text-xs font-bold text-slate-600 mb-1">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-blue-600"></i> मतदाता खोजें (नाम, पिता/पति, EPIC, मकान, क्र.)
+            <i data-lucide="search" class="w-3.5 h-3.5 text-blue-600"></i> मतदाता खोजें (हिंदी, English या Hinglish)
           </label>
-          <div class="relative">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-            <input type="text" id="voterSearchInput" placeholder="जैसे: रामकिशन, ZHU..., मकान 14, या क्र. 105" class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+          <div class="relative flex items-center">
+            <input type="text" id="voterSearchInput" placeholder="जैसे: रामकिशन, Ramkishan, Pooja Meena, ZHU..." class="w-full pl-3.5 pr-20 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+            <button type="button" id="btnVoterSearchGo" onclick="currentVoterPage = 1; renderVoters();" class="absolute right-1 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg korum-btn text-xs font-extrabold flex items-center gap-1">
+              🔍 खोजें
+            </button>
           </div>
         </div>
         <div class="sm:col-span-2">
@@ -2060,6 +2071,181 @@
       }
     });
 
+    // ============================================================================
+    // TRILINGUAL (HINDI + ENGLISH + HINGLISH) PHONETIC & TRANSLITERATION ENGINE
+    // ============================================================================
+    const DEV_VOWELS = {
+      'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ee', 'उ': 'u', 'ऊ': 'oo',
+      'ऋ': 'ri', 'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au', 'ऑ': 'o', 'ऍ': 'e'
+    };
+    const DEV_CONSONANTS = {
+      'क': 'k', 'ख': 'kh', 'ग': 'g', 'घ': 'gh', 'ङ': 'n',
+      'च': 'ch', 'छ': 'chh', 'ज': 'j', 'झ': 'jh', 'ञ': 'n',
+      'ट': 't', 'ठ': 'th', 'ड': 'd', 'ढ': 'dh', 'ण': 'n',
+      'त': 't', 'थ': 'th', 'द': 'd', 'ध': 'dh', 'न': 'n',
+      'प': 'p', 'फ': 'ph', 'ब': 'b', 'भ': 'bh', 'म': 'm',
+      'य': 'y', 'र': 'r', 'ल': 'l', 'व': 'v', 'ळ': 'l',
+      'श': 'sh', 'ष': 'sh', 'स': 's', 'ह': 'h'
+    };
+    const DEV_MATRAS = {
+      'ा': 'aa', 'ि': 'i', 'ी': 'ee', 'ु': 'u', 'ू': 'oo',
+      'ृ': 'ri', 'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au', 'ॉ': 'o', 'ॅ': 'e'
+    };
+
+    function devanagariToRoman(str) {
+      if (!str) return '';
+      let s = String(str)
+        .replace(/ड़/g, 'd').replace(/ढ़/g, 'dh')
+        .replace(/क़/g, 'k').replace(/ख़/g, 'kh')
+        .replace(/ग़/g, 'g').replace(/ज़/g, 'z').replace(/फ़/g, 'f');
+      let out = '';
+      const n = s.length;
+      for (let i = 0; i < n; i++) {
+        const ch = s[i];
+        if (DEV_VOWELS[ch]) {
+          out += DEV_VOWELS[ch];
+        } else if (DEV_CONSONANTS[ch]) {
+          const base = DEV_CONSONANTS[ch];
+          const nxt = i + 1 < n ? s[i + 1] : '';
+          if (nxt === '्') {
+            out += base;
+            i++;
+          } else if (DEV_MATRAS[nxt]) {
+            out += base + DEV_MATRAS[nxt];
+            i++;
+          } else if (!nxt || /[\s,.:\-/()]/.test(nxt)) {
+            out += base;
+          } else {
+            out += base + 'a';
+          }
+        } else if (DEV_MATRAS[ch]) {
+          out += DEV_MATRAS[ch];
+        } else if (ch === 'ं' || ch === 'ँ') {
+          out += 'n';
+        } else if (ch === 'ः') {
+          out += 'h';
+        } else if (ch === '्') {
+          // skip virama
+        } else {
+          out += ch.toLowerCase();
+        }
+      }
+      return out;
+    }
+
+    function toTitleCaseRoman(str) {
+      const rom = devanagariToRoman(str);
+      return rom.replace(/\b[a-z]/g, c => c.toUpperCase());
+    }
+
+    function phoneticNormalize(str) {
+      if (!str) return '';
+      let s = String(str).normalize('NFC');
+      if (/[\u0900-\u097F]/.test(s)) {
+        s = devanagariToRoman(s);
+      }
+      s = s.toLowerCase();
+      s = s.replace(/\u093c/g, '');
+      s = s.replace(/singh|sinh/g, 'sin');
+      s = s.replace(/chh|ch/g, 'c');
+      s = s.replace(/sh/g, 's');
+      s = s.replace(/ph/g, 'f');
+      s = s.replace(/bh/g, 'b');
+      s = s.replace(/gh/g, 'g');
+      s = s.replace(/dh/g, 'd');
+      s = s.replace(/th/g, 't');
+      s = s.replace(/kh/g, 'k');
+      s = s.replace(/jh/g, 'j');
+      s = s.replace(/ee/g, 'i');
+      s = s.replace(/oo/g, 'u');
+      s = s.replace(/aa/g, 'a');
+      s = s.replace(/ai|ei|ay/g, 'e');
+      s = s.replace(/au|ou|aw|ow/g, 'o');
+      s = s.replace(/w/g, 'v').replace(/z/g, 'j').replace(/q/g, 'k');
+      s = s.replace(/m([bp])/g, 'n$1');
+      s = s.replace(/(.)\1+/g, '$1');
+      s = s.replace(/([bcdfgjklmnprstvy])a(?=([bcdfgjklmnprstvy]))/g, '$1');
+      s = s.replace(/a\b/g, '');
+      return s.trim();
+    }
+
+    // Pure Consonant Skeleton: strips internal vowels (a,e,i,o,u,y) and unifies v/b/w so 'verma'=='varma', 'jaisinghpura'=='जयसिंहपुरा', 'bairwa'=='berwa'
+    function consonantSkeleton(phonStr) {
+      if (!phonStr) return '';
+      return phonStr
+        .replace(/v/g, 'b')
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(word => {
+          const first = word[0];
+          const rest = word.slice(1).replace(/[aeiouy]/g, '');
+          return (first + rest).replace(/(.)\1+/g, '$1');
+        })
+        .join(' ');
+    }
+
+    function smartTrilingualMatch(recordBlobObj, rawQuery) {
+      if (!rawQuery) return true;
+      const q = String(rawQuery).trim().toLowerCase();
+      if (!q) return true;
+
+      // 1. Direct substring match (Hindi, EPIC, House No, Serial No, or Roman)
+      if (recordBlobObj.raw.includes(q) || recordBlobObj.roman.includes(q)) return true;
+
+      // 2. Phonetic match (with spaces)
+      const pq = phoneticNormalize(q);
+      if (!pq) return true;
+      if (recordBlobObj.phon.includes(pq)) return true;
+
+      // 3. Space-insensitive phonetic match ('ram kishan' <-> 'ramkishan')
+      const pqNoSpace = pq.replace(/\s+/g, '');
+      if (pqNoSpace && recordBlobObj.phonNoSpace.includes(pqNoSpace)) return true;
+
+      // 4. Consonant Skeleton match ('komal verma' <-> 'कोमल वर्मा', 'jaisinghpura' <-> 'जयसिंहपुरा', 'bairwa' <-> 'berwa')
+      const skelQ = consonantSkeleton(pq);
+      const skelQNoSpace = skelQ.replace(/\s+/g, '');
+      if (skelQNoSpace && recordBlobObj.skelNoSpace.includes(skelQNoSpace)) return true;
+
+      // 5. Multi-word token match (every token in query matches somewhere in record)
+      const tokens = pq.split(/\s+/).filter(Boolean);
+      if (tokens.length > 1) {
+        const allMatch = tokens.every(t => {
+          const tSkel = consonantSkeleton(t);
+          return recordBlobObj.phon.includes(t) || (tSkel && recordBlobObj.skel.includes(tSkel));
+        });
+        if (allMatch) return true;
+      }
+      return false;
+    }
+
+    function buildRecordSearchIndex(textParts) {
+      const raw = textParts.join(' ').toLowerCase();
+      const roman = devanagariToRoman(raw);
+      const phon = phoneticNormalize(raw);
+      const phonNoSpace = phon.replace(/\s+/g, '');
+      const skel = consonantSkeleton(phon);
+      const skelNoSpace = skel.replace(/\s+/g, '');
+      return { raw, roman, phon, phonNoSpace, skel, skelNoSpace };
+    }
+
+    // Pre-index all 2,527 voters and 242 families (including ward village & area names) for <1ms Trilingual Search
+    RAW_DATA.voters.forEach(v => {
+      const wObj = wardByNum[v.w] || {};
+      v._romanName = toTitleCaseRoman(v.n);
+      v._romanRel = toTitleCaseRoman(v.rn);
+      v._idx = buildRecordSearchIndex([v.n, v.rn, v.mh, wObj.vil || '', wObj.ar || '', v.ep, v.h, v.s, 'वार्ड ' + v.w, 'ward ' + v.w]);
+      v._idxNameOnly = buildRecordSearchIndex([v.n]);
+      v._idxRelOnly = buildRecordSearchIndex([v.rn]);
+    });
+
+    RAW_DATA.families.forEach(f => {
+      const wObj = wardByNum[f.w] || {};
+      const mems = votersByFamId[f.id] || [];
+      const memNames = mems.map(m => `${m.n} ${m.rn} ${m.ep}`).join(' ');
+      f._romanHead = toTitleCaseRoman(f.hd);
+      f._idx = buildRecordSearchIndex([f.hd, f.hr, f.mh, wObj.vil || '', wObj.ar || '', f.h, 'वार्ड ' + f.w, 'ward ' + f.w, memNames]);
+    });
+
     function refreshIcons() {
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         try {
@@ -2556,15 +2742,8 @@
         const st = getFamState(f.id);
         if (statusFilter !== 'ALL' && st.cat !== statusFilter) return false;
         if (q) {
-          const inHead = f.hd.toLowerCase().includes(q) || f.hr.toLowerCase().includes(q);
-          const inHouse = String(f.h).toLowerCase().includes(q) || f.mh.toLowerCase().includes(q);
-          const inNote = (st.note || '').toLowerCase().includes(q);
-          let inMembers = false;
-          if (!inHead && !inHouse && !inNote) {
-            const members = votersByFamId[f.id] || [];
-            inMembers = members.some(m => m.n.toLowerCase().includes(q) || m.rn.toLowerCase().includes(q) || m.ep.toLowerCase().includes(q));
-          }
-          if (!inHead && !inHouse && !inNote && !inMembers) return false;
+          const noteMatch = st.note && smartTrilingualMatch(buildRecordSearchIndex([st.note]), q);
+          if (!smartTrilingualMatch(f._idx, q) && !noteMatch) return false;
         }
         return true;
       });
@@ -2717,9 +2896,9 @@
         if (castFilter === 'SENT' && !rawVst.sentToVote) return false;
 
         if (advSearchCriteria) {
-          if (advSearchCriteria.firstName && !v.n.toLowerCase().includes(advSearchCriteria.firstName)) return false;
-          if (advSearchCriteria.lastName && !v.n.toLowerCase().includes(advSearchCriteria.lastName)) return false;
-          if (advSearchCriteria.relName && !v.rn.toLowerCase().includes(advSearchCriteria.relName)) return false;
+          if (advSearchCriteria.firstName && !smartTrilingualMatch(v._idxNameOnly, advSearchCriteria.firstName)) return false;
+          if (advSearchCriteria.lastName && !smartTrilingualMatch(v._idxNameOnly, advSearchCriteria.lastName)) return false;
+          if (advSearchCriteria.relName && !smartTrilingualMatch(v._idxRelOnly, advSearchCriteria.relName)) return false;
           if (advSearchCriteria.ward !== 'ALL' && String(v.w) !== advSearchCriteria.ward) return false;
           if (advSearchCriteria.booth !== 'ALL') {
             const wObj = wardByNum[v.w] || {};
@@ -2732,13 +2911,8 @@
         }
 
         if (q) {
-          const match = v.n.toLowerCase().includes(q) ||
-                        v.rn.toLowerCase().includes(q) ||
-                        v.ep.toLowerCase().includes(q) ||
-                        String(v.h).toLowerCase().includes(q) ||
-                        String(v.s).includes(q) ||
-                        (rawVst.mobile || '').includes(q);
-          if (!match) return false;
+          const mobMatch = (rawVst.mobile || '').includes(q);
+          if (!smartTrilingualMatch(v._idx, q) && !mobMatch) return false;
         }
         return true;
       });
@@ -2788,7 +2962,7 @@
                 </div>
                 <div class="flex items-center justify-between gap-2 mt-1">
                   <button type="button" onclick="openVoterDetailModal('${v.id}')" class="text-base font-extrabold text-purple-800 hover:underline text-left truncate">
-                    ${v.n}
+                    ${v.n} <span class="text-xs font-semibold text-slate-400">(${v._romanName})</span>
                   </button>
                   <span class="text-xs font-extrabold text-slate-800 shrink-0">${v.g} (${v.a})</span>
                 </div>
@@ -2991,8 +3165,7 @@
       const filteredFams = RAW_DATA.families.filter(f => {
         if (wardFilter !== 'ALL' && String(f.w) !== wardFilter) return false;
         if (q) {
-          const m = f.hd.toLowerCase().includes(q) || String(f.h).toLowerCase().includes(q) || f.mh.toLowerCase().includes(q);
-          if (!m) return false;
+          if (!smartTrilingualMatch(f._idx, q)) return false;
         }
 
         let activeCount = 0;
@@ -3856,25 +4029,13 @@
 
       const filteredVoters = RAW_DATA.voters.filter(v => {
         if (!allowedWards.has(v.w)) return false;
-        if (q) {
-          const m = v.n.toLowerCase().includes(q) ||
-                    v.rn.toLowerCase().includes(q) ||
-                    v.ep.toLowerCase().includes(q) ||
-                    String(v.h).toLowerCase().includes(q) ||
-                    String(v.s).includes(q);
-          if (!m) return false;
-        }
+        if (q && !smartTrilingualMatch(v._idx, q)) return false;
         return true;
       });
 
       const filteredFamilies = RAW_DATA.families.filter(f => {
         if (!allowedWards.has(f.w)) return false;
-        if (q) {
-          const inFam = f.hd.toLowerCase().includes(q) || String(f.h).toLowerCase().includes(q) || f.mh.toLowerCase().includes(q);
-          const mems = votersByFamId[f.id] || [];
-          const inMem = mems.some(m => m.n.toLowerCase().includes(q) || m.rn.toLowerCase().includes(q) || m.ep.toLowerCase().includes(q));
-          if (!inFam && !inMem) return false;
-        }
+        if (q && !smartTrilingualMatch(f._idx, q)) return false;
         return true;
       });
 
@@ -4372,14 +4533,55 @@
     }
 
     document.getElementById('homeWardFilterSelect')?.addEventListener('change', renderHomeDashboard);
+
+    function renderHomeLiveSearchDropdown() {
+      const inputEl = document.getElementById('homeQuickSearchInput');
+      const dropEl = document.getElementById('homeLiveSearchDropdown');
+      if (!inputEl || !dropEl) return;
+      const q = (inputEl.value || '').trim();
+      if (!q) {
+        dropEl.classList.add('hidden');
+        dropEl.innerHTML = '';
+        return;
+      }
+      const matches = RAW_DATA.voters.filter(v => smartTrilingualMatch(v._idx, q));
+      if (matches.length === 0) {
+        dropEl.innerHTML = `<div class="p-3 text-xs text-slate-500 text-center">कोई मतदाता नहीं मिला ("${q}")</div>`;
+        dropEl.classList.remove('hidden');
+        return;
+      }
+      const topItems = matches.slice(0, 8);
+      dropEl.innerHTML = `
+        <div class="px-3 py-1.5 bg-purple-50 text-[11px] font-extrabold text-purple-900 flex items-center justify-between">
+          <span>🔍 कुल ${matches.length} मतदाता मिले (हिंदी / English / Hinglish)</span>
+          <button type="button" onclick="document.getElementById('btnHomeQuickSearchGo').click()" class="text-purple-700 underline">सभी ${matches.length} देखें →</button>
+        </div>
+        ${topItems.map(v => `
+          <div class="p-2.5 hover:bg-slate-50 flex items-center justify-between gap-2 text-xs">
+            <div class="min-w-0">
+              <div class="font-extrabold text-slate-900 truncate">${v.n} <span class="text-slate-400 font-normal">(${v._romanName})</span></div>
+              <div class="text-[11px] text-slate-600 truncate">${v.rt}: ${v.rn} | वार्ड ${v.w} | क्र. #${v.s} | मकान ${v.h}</div>
+            </div>
+            <button type="button" onclick="openVoterDetailModal('${v.id}')" class="px-3 py-1 rounded-lg korum-btn text-[11px] font-extrabold shrink-0">विवरण ›</button>
+          </div>
+        `).join('')}
+      `;
+      dropEl.classList.remove('hidden');
+    }
+
+    document.getElementById('homeQuickSearchInput')?.addEventListener('input', renderHomeLiveSearchDropdown);
+
     document.getElementById('btnHomeQuickSearchGo')?.addEventListener('click', () => {
       const q = document.getElementById('homeQuickSearchInput')?.value || '';
+      document.getElementById('homeLiveSearchDropdown')?.classList.add('hidden');
       document.getElementById('voterSearchInput').value = q;
       currentVoterPage = 1;
       switchTab('voters');
     });
+
     document.getElementById('homeQuickSearchInput')?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         document.getElementById('btnHomeQuickSearchGo')?.click();
       }
     });
