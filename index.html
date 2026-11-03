@@ -25,6 +25,25 @@
     .badge-U { background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .korum-gradient {
+      background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 50%, #1E1B4B 100%);
+    }
+    .korum-btn {
+      background: linear-gradient(135deg, #6D28D9 0%, #4F46E5 100%);
+      color: #FFFFFF;
+    }
+    .korum-btn:hover {
+      background: linear-gradient(135deg, #5B21B6 0%, #4338CA 100%);
+    }
+    .bottom-nav-active {
+      color: #6D28D9 !important;
+      font-weight: 800 !important;
+    }
+    .chip-selected {
+      background-color: #6D28D9 !important;
+      color: #FFFFFF !important;
+      border-color: #6D28D9 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -329,11 +348,23 @@
   <div class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-[105px] sm:top-[102px] z-20 shadow-sm">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 py-1.5 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
       <div class="flex items-center gap-1.5">
-        <button data-tab="families" class="nav-tab tab-active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5">
+        <button data-tab="home" class="nav-tab tab-active px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i> स्मार्ट डैशबोर्ड
+        </button>
+        <button data-tab="families" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
           <i data-lucide="home" class="w-3.5 h-3.5"></i> परिवार-वार ट्रैकर (242)
         </button>
         <button data-tab="voters" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
           <i data-lucide="users" class="w-3.5 h-3.5"></i> संपूर्ण वोटर सर्च (2,527)
+        </button>
+        <button data-tab="reports" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
+          <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i> मतदाता रिपोर्ट्स
+        </button>
+        <button data-tab="warroom" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
+          <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> वॉर रूम & पोलिंग
+        </button>
+        <button data-tab="team" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> मेरी टीम & ब्रॉडकास्ट
         </button>
         <button data-tab="dashboard" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 whitespace-nowrap transition flex items-center gap-1.5">
           <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> वार्ड-वार गणित (9 वार्ड)
@@ -350,7 +381,7 @@
   </div>
 
   <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 flex-1">
+  <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 pb-24 flex-1">
 
     <!-- Toast Notification -->
     <div id="toastMsg" class="fixed bottom-4 right-4 z-50 hidden bg-slate-900 text-white text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg border border-slate-700"></div>
@@ -365,8 +396,204 @@
       </div>
     </div>
 
+    <!-- TAB 0: KORUM-STYLE SMART HOME DASHBOARD -->
+    <section id="view-home" class="space-y-4">
+      <!-- Top Candidate / User Profile Card (Korum Style) -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/90 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <button type="button" onclick="openProfileModal()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-amber-500 p-[2.5px] shadow-lg shrink-0 relative group">
+            <div class="w-full h-full rounded-full bg-purple-100 flex items-center justify-center overflow-hidden">
+              <img id="homeProfileAvatarImg" src="" alt="" class="w-full h-full object-cover hidden">
+              <i id="homeProfileAvatarIcon" data-lucide="user-Check" class="w-9 h-9 text-purple-700"></i>
+            </div>
+            <span class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-purple-700 text-white flex items-center justify-center text-[10px] border-2 border-white shadow">✎</span>
+          </button>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h2 id="homeProfileName" class="text-lg sm:text-xl font-extrabold text-slate-900">मुख्य एडमिन</h2>
+              <span id="homeProfileRoleBadge" class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-300 text-[11px] font-extrabold">@ADMIN</span>
+            </div>
+            <p class="text-xs sm:text-sm font-extrabold text-purple-800 mt-0.5">ग्राम पंचायत महाराजपुरा (नांगल राजावतान, दौसा)</p>
+            <p class="text-[11px] sm:text-xs text-slate-500 font-medium">कुल 9 वार्ड | 3 मतदान केंद्र (बूथ 68, 69, 70) | स्मार्ट इलेक्शन मैनेजमेंट</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" onclick="openPrintSetupModal()" class="px-3 py-2 rounded-2xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-900 text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="printer" class="w-4 h-4 text-purple-700"></i> ब्लूटूथ प्रिंटर सेटअप
+          </button>
+          <button type="button" onclick="switchTab('printcenter')" class="px-3 py-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="file-text" class="w-4 h-4 text-emerald-700"></i> 4-in-1 PDF व पर्ची
+          </button>
+          <button type="button" onclick="openAdvanceSearchModal()" class="px-3 py-2 rounded-2xl korum-btn text-xs font-extrabold flex items-center gap-1.5 shadow-md transition">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> उन्नत खोज
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Main Visual Action Cards (Exactly like Korum Video: मानचित्र/लोकेशन पर मतदाता | वार रूम | मतदाता रिपोर्ट) -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/90">
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-4 text-center">
+          <button type="button" onclick="openReportCategory('MOHALLA')" class="group p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-emerald-50/70 to-white hover:from-emerald-100/80 border border-emerald-200/80 transition flex flex-col items-center justify-center gap-2 shadow-sm">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition">
+              <i data-lucide="map-pinned" class="w-6 h-6 sm:w-8 sm:h-8"></i>
+            </div>
+            <div>
+              <div class="text-xs sm:text-sm font-extrabold text-slate-900">मानचित्र / लोकेशन मतदाता</div>
+              <div class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">मोहल्ला, ढाणी व बूथ अनुसार</div>
+            </div>
+          </button>
+
+          <button type="button" onclick="switchTab('warroom')" class="group p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-purple-50/70 to-white hover:from-purple-100/80 border border-purple-200/80 transition flex flex-col items-center justify-center gap-2 shadow-sm">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition">
+              <i data-lucide="swords" class="w-6 h-6 sm:w-8 sm:h-8"></i>
+            </div>
+            <div>
+              <div class="text-xs sm:text-sm font-extrabold text-slate-900">वार रूम (War Room)</div>
+              <div class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">लाइव पोलिंग व टीम मॉनिटरिंग</div>
+            </div>
+          </button>
+
+          <button type="button" onclick="switchTab('reports')" class="group p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-amber-50/70 to-white hover:from-amber-100/80 border border-amber-200/80 transition flex flex-col items-center justify-center gap-2 shadow-sm">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition">
+              <i data-lucide="bar-chart-big" class="w-6 h-6 sm:w-8 sm:h-8"></i>
+            </div>
+            <div>
+              <div class="text-xs sm:text-sm font-extrabold text-slate-900">मतदाता रिपोर्ट</div>
+              <div class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">वर्ण, उपनाम, आयु व रंग अनुसार</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Instant Voter Search Bar on Home Screen (Just like Video) -->
+        <div class="mt-4 flex items-center gap-2">
+          <div class="relative flex-1">
+            <input type="text" id="homeQuickSearchInput" placeholder="मतदाता नाम, पिता का नाम, मकान या EPIC खोजें..." class="w-full pl-4 pr-10 py-3 text-sm font-semibold rounded-2xl border-2 border-purple-200 focus:border-purple-600 focus:outline-none bg-slate-50/60">
+            <button type="button" id="btnHomeQuickSearchGo" class="absolute right-3 top-1/2 -translate-y-1/2 text-purple-700 hover:text-purple-900">
+              <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <button type="button" onclick="openAdvanceSearchModal()" class="p-3 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white shadow-md shrink-0" title="उन्नत खोज (Advance Voter Search)">
+            <i data-lucide="SlidersHorizontal" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- मतदाता विवरण (Voter Summary Card - Exact Korum Style) -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/90">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900">मतदाता विवरण (ग्राम पंचायत महाराजपुरा)</h3>
+          <select id="homeWardFilterSelect" class="px-2.5 py-1 text-xs font-bold rounded-xl border border-purple-300 bg-purple-50 text-purple-900 focus:outline-none">
+            <option value="ALL">सभी 9 वार्ड (संपूर्ण पंचायत)</option>
+            <option value="1">वार्ड 1 (233 वोटर)</option>
+            <option value="2">वार्ड 2 (289 वोटर)</option>
+            <option value="3">वार्ड 3 (269 वोटर)</option>
+            <option value="4">वार्ड 4 (232 वोटर)</option>
+            <option value="5">वार्ड 5 (318 वोटर)</option>
+            <option value="6">वार्ड 6 (353 वोटर)</option>
+            <option value="7">वार्ड 7 (354 वोटर)</option>
+            <option value="8">वार्ड 8 (265 वोटर)</option>
+            <option value="9">वार्ड 9 (214 वोटर)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-4 gap-2 text-center pt-1">
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="text-[11px] sm:text-xs font-bold text-slate-500">कुल मतदाता</div>
+            <div id="homeStatTotal" class="text-base sm:text-2xl font-extrabold text-purple-900 mt-1">2,527</div>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="text-[11px] sm:text-xs font-bold text-slate-500">पुरुष</div>
+            <div id="homeStatMale" class="text-base sm:text-2xl font-extrabold text-indigo-800 mt-1">1,355</div>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="text-[11px] sm:text-xs font-bold text-slate-500">महिला</div>
+            <div id="homeStatFemale" class="text-base sm:text-2xl font-extrabold text-pink-700 mt-1">1,172</div>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="text-[11px] sm:text-xs font-bold text-slate-500">कुल परिवार</div>
+            <div id="homeStatFamilies" class="text-base sm:text-2xl font-extrabold text-emerald-700 mt-1">242</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- मतदाता भावनाएँ (Voter Sentiments Donut Chart + Live Poll Monitoring Grid) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Voter Sentiments Card -->
+        <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900">मतदाता भावनाएँ (Voter Sentiments)</h3>
+              <p class="text-[11px] text-slate-500">रंग कोड एवं झुकाव के अनुसार लाइव ग्राफ</p>
+            </div>
+            <button type="button" onclick="switchTab('families')" class="text-xs font-bold text-purple-700 hover:underline">सर्वे अपडेट करें →</button>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center gap-5 pt-2">
+            <!-- Dynamic SVG Donut -->
+            <div id="homeSentimentDonutWrap" class="w-36 h-36 shrink-0 flex items-center justify-center relative"></div>
+            <!-- Legend Grid -->
+            <div id="homeSentimentLegend" class="grid grid-cols-2 gap-2.5 flex-1 w-full text-xs"></div>
+          </div>
+        </div>
+
+        <!-- लोकेशन के अनुसार मतदाता & पोलिंग मॉनिटरिंग (From Video Poster) -->
+        <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900">पोलिंग मॉनिटरिंग एवं बूथ स्थिति</h3>
+              <p class="text-[11px] text-slate-500">तीनों मतदान केंद्रों (बूथ 68, 69, 70) का लाइव मतदान व सर्वे</p>
+            </div>
+            <button type="button" onclick="switchTab('warroom')" class="text-xs font-bold text-purple-700 hover:underline">वार रूम खोलें →</button>
+          </div>
+          <div id="homeBoothMonitoringList" class="space-y-2.5"></div>
+        </div>
+      </div>
+
+      <!-- 4 Additional Smart Campaign Modules from Video (Contact Mapping, On-Call, WhatsApp Broadcast, Bluetooth Slip) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button type="button" onclick="openReportCategory('CONTACT_LINK')" class="bg-white hover:bg-purple-50/50 p-3.5 rounded-2xl border border-slate-200 shadow-sm text-left transition flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+            <i data-lucide="phone-call" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs sm:text-sm font-extrabold text-slate-900">लाभार्थी व संपर्क लिंकिंग</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">मोबाइल नं. व ऑन-कॉल सुविधा</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="switchTab('team')" class="bg-white hover:bg-emerald-50/50 p-3.5 rounded-2xl border border-slate-200 shadow-sm text-left transition flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs sm:text-sm font-extrabold text-slate-900">WhatsApp ब्रॉडकास्ट</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">1-Click बल्क संदेश व पर्ची शेयर</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="openPrintSetupModal()" class="bg-white hover:bg-amber-50/50 p-3.5 rounded-2xl border border-slate-200 shadow-sm text-left transition flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+            <i data-lucide="bluetooth" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs sm:text-sm font-extrabold text-slate-900">ब्लूटूथ थर्मल प्रिंटर</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">मोबाइल से सीधे वोटर स्लिप प्रिंट</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="switchTab('team')" class="bg-white hover:bg-purple-50/50 p-3.5 rounded-2xl border border-slate-200 shadow-sm text-left transition flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+            <i data-lucide="users-round" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs sm:text-sm font-extrabold text-slate-900">मेरी टीम मैनेजमेंट</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">वार्ड प्रभारी, बूथ एजेंट व सर्वेयर</div>
+          </div>
+        </button>
+      </div>
+    </section>
+
     <!-- TAB 1: FAMILIES VIEW -->
-    <section id="view-families" class="space-y-4">
+    <section id="view-families" class="space-y-4 hidden">
       <!-- Filter & Search Controls -->
       <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/90 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
         <div class="sm:col-span-4">
@@ -494,15 +721,30 @@
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 px-1">
-        <div id="voterResultSummary" class="font-semibold text-slate-700">दिखाए जा रहे मतदाता: 2,527</div>
-        <div class="flex items-center gap-2">
-          <button id="btnPrevPage" class="px-3 py-1 rounded bg-white border border-slate-300 hover:bg-slate-50 font-semibold">◀ पिछला</button>
+        <div class="flex items-center gap-2 flex-wrap">
+          <div id="voterResultSummary" class="font-extrabold text-slate-800">Showing 2,527/2,527</div>
+          <button type="button" onclick="openAdvanceSearchModal()" class="px-3 py-1.5 rounded-xl korum-btn text-xs font-extrabold flex items-center gap-1 shadow-sm">
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> उन्नत खोज (Advance Search)
+          </button>
+          <button type="button" id="btnResetAdvSearch" onclick="resetAdvanceVoterSearch()" class="hidden px-2.5 py-1 rounded-xl bg-rose-100 text-rose-800 border border-rose-300 text-xs font-bold">
+            ✕ फ़िल्टर हटाएं
+          </button>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <div class="inline-flex rounded-xl border border-slate-300 bg-white p-0.5">
+            <button type="button" id="btnVoterViewCards" onclick="setVoterDisplayMode('CARDS')" class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-purple-700 text-white">📱 कार्ड व्यू</button>
+            <button type="button" id="btnVoterViewTable" onclick="setVoterDisplayMode('TABLE')" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700">📋 टेबल व्यू</button>
+          </div>
+          <button id="btnPrevPage" class="px-3 py-1 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 font-semibold">◀ पिछला</button>
           <span id="pageIndicator" class="font-semibold text-slate-800">पृष्ठ 1</span>
-          <button id="btnNextPage" class="px-3 py-1 rounded bg-white border border-slate-300 hover:bg-slate-50 font-semibold">अगला ▶</button>
+          <button id="btnNextPage" class="px-3 py-1 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 font-semibold">अगला ▶</button>
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+      <!-- Korum-Style Mobile Voter Cards Grid (Default View with 'विवरण >' and Print Icon) -->
+      <div id="votersCardGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+
+      <div id="votersTableWrap" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs sm:text-sm">
           <thead>
             <tr class="bg-slate-800 text-white">
@@ -761,6 +1003,253 @@
       <div id="servicePreviewContainer" class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200"></div>
     </section>
 
+    <!-- TAB 6: VOTER ANALYSIS REPORTS HUB (मतदाता रिपोर्ट - Korum Video 01:05) -->
+    <section id="view-reports" class="space-y-4 hidden">
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900">📊 मतदाता विश्लेषण एवं स्मार्ट रिपोर्ट्स (Voter Analysis Reports)</h2>
+            <p class="text-xs text-slate-500">वर्णानुक्रम, उपनाम/जाति, आयु वर्ग, रंग कोड, वार्ड, बूथ एवं मोहल्ला अनुसार विस्तृत विश्लेषण</p>
+          </div>
+          <select id="reportWardFilter" class="px-3 py-1.5 text-xs font-bold rounded-xl border border-purple-300 bg-purple-50 text-purple-900">
+            <option value="ALL">सभी 9 वार्ड (संपूर्ण पंचायत — 2,527 वोटर)</option>
+            <option value="1">वार्ड 1 (233)</option>
+            <option value="2">वार्ड 2 (289)</option>
+            <option value="3">वार्ड 3 (269)</option>
+            <option value="4">वार्ड 4 (232)</option>
+            <option value="5">वार्ड 5 (318)</option>
+            <option value="6">वार्ड 6 (353)</option>
+            <option value="7">वार्ड 7 (354)</option>
+            <option value="8">वार्ड 8 (265)</option>
+            <option value="9">वार्ड 9 (214)</option>
+          </select>
+        </div>
+
+        <!-- Group 1: क्रमबद्ध करना (Sorting / Classification Reports) -->
+        <div>
+          <h3 class="text-xs sm:text-sm font-extrabold text-slate-700 mb-2.5">क्रमबद्ध करना (Classification Reports)</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button type="button" onclick="openReportCategory('ALPHA')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-extrabold text-sm">अ-ज्ञ</div>
+              <div class="text-xs font-extrabold text-slate-900">वर्णानुक्रम अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('SURNAME')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center"><i data-lucide="users" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">उपनाम / जाति अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('AGE')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center"><i data-lucide="calendar-clock" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">आयु वर्ग अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('COLOR')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-pink-100 text-pink-800 flex items-center justify-center"><i data-lucide="palette" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">रंग कोड अनुसार</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Group 2: स्थान-आधारित (Location-Based Reports) -->
+        <div>
+          <h3 class="text-xs sm:text-sm font-extrabold text-slate-700 mb-2.5">स्थान-आधारित (Location & Booth Reports)</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button type="button" onclick="openReportCategory('WARD')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center"><i data-lucide="landmark" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">वार्ड / यादीभाग अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('MOHALLA')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">मोहल्ला / पते के अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('BOOTH')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-800 flex items-center justify-center"><i data-lucide="vote" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">मतदान केंद्र (बूथ) अनुसार</div>
+            </button>
+            <button type="button" onclick="openReportCategory('ISSUES')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center"><i data-lucide="clipboard-list" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">समस्या व संतोष बिंदु रिपोर्ट</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Group 3: संपर्क लिंकिंग एवं विशेष रिपोर्ट (Contact Mapping & Outstation) -->
+        <div>
+          <h3 class="text-xs sm:text-sm font-extrabold text-slate-700 mb-2.5">संपर्क मैपिंग एवं विशेष खंड</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button type="button" onclick="openReportCategory('CONTACT_LINK')" class="report-tile-btn p-3 rounded-2xl bg-purple-50 hover:bg-purple-100 border border-purple-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-purple-700 text-white flex items-center justify-center"><i data-lucide="phone-forwarded" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-purple-950">लाभार्थी व मोबाइल लिंकिंग</div>
+            </button>
+            <button type="button" onclick="openReportCategory('RESIDENCE')" class="report-tile-btn p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 flex flex-col items-center text-center gap-1.5 transition">
+              <div class="w-11 h-11 rounded-xl bg-cyan-100 text-cyan-800 flex items-center justify-center"><i data-lucide="building-2" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-slate-900">निवासी / प्रवासी (बाहर)</div>
+            </button>
+            <button type="button" onclick="switchTab('printcenter')" class="p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 flex flex-col items-center text-center gap-1.5 transition col-span-2">
+              <div class="w-11 h-11 rounded-xl bg-emerald-700 text-white flex items-center justify-center"><i data-lucide="printer" class="w-5 h-5"></i></div>
+              <div class="text-xs font-extrabold text-emerald-950">4-in-1 PDF प्रिंट सेंटर (Photo List, ABCD List, Family List, Voter Parchi)</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Output Area for Selected Report -->
+      <div id="reportDynamicOutput" class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200"></div>
+    </section>
+
+    <!-- TAB 7: WAR ROOM & REWARDS (वार रूम - Korum Video 01:13-01:16) -->
+    <section id="view-warroom" class="space-y-4 hidden">
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="swords" class="w-5 h-5 text-purple-700"></i> वार रूम एवं लाइव पोलिंग मॉनिटरिंग (War Room)
+            </h2>
+            <p class="text-xs text-slate-500">ग्राम पंचायत महाराजपुरा — मतदान दिवस लाइव ट्रैकिंग, प्रतिनिधि प्रगति एवं आयु-वार मतदान</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="warRoomWardSelect" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-xl border border-slate-300 bg-white">
+              <option value="ALL">सभी वार्ड (1-9)</option>
+              <option value="1">वार्ड 1</option>
+              <option value="2">वार्ड 2</option>
+              <option value="3">वार्ड 3</option>
+              <option value="4">वार्ड 4</option>
+              <option value="5">वार्ड 5</option>
+              <option value="6">वार्ड 6</option>
+              <option value="7">वार्ड 7</option>
+              <option value="8">वार्ड 8</option>
+              <option value="9">वार्ड 9</option>
+            </select>
+            <select id="warRoomBoothSelect" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-xl border border-slate-300 bg-white">
+              <option value="ALL">बूथ चुनें (सभी 3 बूथ)</option>
+              <option value="68">बूथ 68 (कमरा नं. 1)</option>
+              <option value="69">बूथ 69 (कमरा नं. 2)</option>
+              <option value="70">बूथ 70 (कमरा नं. 3)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Top Live Turnout Strip (Exact Korum Video Layout: मतदान हेतु भेजा गया | मतदान किया | मतदान नहीं किया | मतदान %) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <button type="button" onclick="filterVotersFromWarRoom('SENT')" class="p-3.5 rounded-2xl bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200 transition">
+            <div class="text-xs font-bold text-slate-700">मतदान हेतु भेजा गया</div>
+            <div id="warSentCount" class="text-xl sm:text-2xl font-extrabold text-indigo-900 mt-1">0</div>
+            <div class="text-[11px] text-indigo-700 font-bold mt-0.5">सूची देखें »</div>
+          </button>
+          <button type="button" onclick="filterVotersFromWarRoom('CAST')" class="p-3.5 rounded-2xl bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 transition">
+            <div class="text-xs font-bold text-slate-700">मतदान किया</div>
+            <div id="warVotedCount" class="text-xl sm:text-2xl font-extrabold text-emerald-700 mt-1">0</div>
+            <div class="text-[11px] text-emerald-700 font-bold mt-0.5">सूची देखें »</div>
+          </button>
+          <button type="button" onclick="filterVotersFromWarRoom('PENDING')" class="p-3.5 rounded-2xl bg-rose-50/70 hover:bg-rose-100 border border-rose-200 transition">
+            <div class="text-xs font-bold text-slate-700">मतदान नहीं किया</div>
+            <div id="warPendingCount" class="text-xl sm:text-2xl font-extrabold text-rose-700 mt-1">2,527</div>
+            <div class="text-[11px] text-rose-700 font-bold mt-0.5">सूची देखें »</div>
+          </button>
+          <div class="p-3.5 rounded-2xl bg-cyan-50/70 border border-cyan-200 flex flex-col justify-center">
+            <div class="text-xs font-bold text-slate-700">मतदान %</div>
+            <div id="warTurnoutPct" class="text-xl sm:text-2xl font-extrabold text-cyan-700 mt-1">0%</div>
+            <div class="text-[11px] text-cyan-800 font-semibold mt-0.5">लाइव प्रतिशत</div>
+          </div>
+        </div>
+
+        <!-- War Room Voter Breakdown Card -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+          <div class="text-xs sm:text-sm font-extrabold text-slate-800 mb-2">मतदाता विवरण (चयनित क्षेत्र)</div>
+          <div class="grid grid-cols-4 gap-2 text-center">
+            <div>
+              <div class="text-[11px] text-slate-500 font-bold">कुल मतदाता</div>
+              <div id="warTotVoters" class="text-base sm:text-lg font-extrabold text-purple-900">2,527</div>
+            </div>
+            <div>
+              <div class="text-[11px] text-slate-500 font-bold">पुरुष</div>
+              <div id="warMaleVoters" class="text-base sm:text-lg font-extrabold text-purple-900">1,355</div>
+            </div>
+            <div>
+              <div class="text-[11px] text-slate-500 font-bold">महिला</div>
+              <div id="warFemaleVoters" class="text-base sm:text-lg font-extrabold text-purple-900">1,172</div>
+            </div>
+            <div>
+              <div class="text-[11px] text-slate-500 font-bold">परिवार</div>
+              <div id="warFamCount" class="text-base sm:text-lg font-extrabold text-purple-900">242</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Representative-wise & Age-wise Turnout Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- प्रतिनिधि अनुसार (Surveyor/Representative Progress) -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">प्रतिनिधि / सर्वेयर अनुसार (सर्वे व मतदान)</h3>
+              <span class="text-[11px] text-emerald-700 font-bold">सर्वे किए / वोट डाले</span>
+            </div>
+            <div id="warRepProgressGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+          </div>
+
+          <!-- पुरस्कृत / लाभार्थी रिकॉर्ड & आयु-वार मतदान -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">पुरस्कृत / लाभार्थी रिकॉर्ड (Beneficiary Tracking)</h3>
+              <div class="grid grid-cols-4 gap-2 text-center text-xs pt-1">
+                <div class="p-2 rounded-xl bg-slate-50">
+                  <div class="text-[10px] text-slate-500 font-bold">कुल लाभार्थी</div>
+                  <div id="warRewardTotal" class="text-sm sm:text-base font-extrabold text-purple-900 mt-0.5">0</div>
+                </div>
+                <div class="p-2 rounded-xl bg-emerald-50">
+                  <div class="text-[10px] text-emerald-700 font-bold">मतदान किया</div>
+                  <div id="warRewardVoted" class="text-sm sm:text-base font-extrabold text-emerald-700 mt-0.5">0</div>
+                </div>
+                <div class="p-2 rounded-xl bg-rose-50">
+                  <div class="text-[10px] text-rose-700 font-bold">मतदान बाकी</div>
+                  <div id="warRewardPending" class="text-sm sm:text-base font-extrabold text-rose-700 mt-0.5">0</div>
+                </div>
+                <div class="p-2 rounded-xl bg-indigo-50">
+                  <div class="text-[10px] text-indigo-700 font-bold">भेजे गए</div>
+                  <div id="warRewardSent" class="text-sm sm:text-base font-extrabold text-indigo-700 mt-0.5">0</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">आयु-वार मतदान (Age-Group Turnout)</h3>
+              <div id="warAgeBreakdown" class="space-y-2 text-xs"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: MY TEAM MANAGEMENT & WHATSAPP BROADCAST (मेरी टीम - Korum Video 00:52-01:02 & 01:24) -->
+    <section id="view-team" class="space-y-4 hidden">
+      <!-- Role Summary Header Card -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center">
+              <i data-lucide="users-round" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">मेरी चुनावी टीम एवं कार्यकर्ता प्रबंधन (Team Management)</h2>
+              <p class="text-xs text-slate-500">वार्ड प्रभारी, बूथ प्रमुख, सर्वेयर, पोलिंग एजेंट व स्वयंसेवकों की जिम्मेदारी और लाइव प्रगति</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="openBroadcastModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="send" class="w-4 h-4"></i> संदेश भेजें (WhatsApp Broadcast)
+            </button>
+            <button type="button" onclick="openAddTeamMemberModal()" class="px-3.5 py-2 rounded-xl korum-btn text-xs font-extrabold flex items-center gap-1.5 shadow-md">
+              <i data-lucide="user-plus" class="w-4 h-4"></i> + सदस्य जोड़ें
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Count Grid (Exact Video Roles) -->
+        <div id="teamRoleCountGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-center text-xs"></div>
+      </div>
+
+      <!-- Team Members Cards Grid -->
+      <div id="teamMembersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    </section>
+
   </main>
   </div><!-- /#appProtectedShell -->
 
@@ -945,6 +1434,518 @@
             <input type="url" id="cloudSyncUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-2.5 py-1.5 text-xs rounded border border-slate-300">
             <button id="btnSaveCloudUrl" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs">सेव व सिंक करें</button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FIXED BOTTOM NAVIGATION BAR WITH FLOATING CENTER ACTION BUTTON (Exact Korum Mobile UI) -->
+  <nav id="mobileBottomNav" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-[0_-6px_25px_rgba(15,23,42,0.08)] px-2 py-1.5">
+    <div class="max-w-xl mx-auto grid grid-cols-5 items-center text-center relative">
+      <button type="button" onclick="switchTab('reports')" data-bnav="reports" class="bnav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-purple-700 transition">
+        <i data-lucide="file-bar-chart-2" class="w-5 h-5"></i>
+        <span class="text-[10px] sm:text-[11px] font-bold mt-0.5 truncate max-w-[68px]">मतदाता रिपोर्ट</span>
+      </button>
+
+      <button type="button" onclick="switchTab('home')" data-bnav="home" class="bnav-btn bottom-nav-active flex flex-col items-center justify-center py-1 text-slate-500 hover:text-purple-700 transition">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        <span class="text-[10px] sm:text-[11px] font-bold mt-0.5 truncate max-w-[68px]">डैशबोर्ड</span>
+      </button>
+
+      <!-- Floating Center Royal Purple Button (Family Survey / Quick Action) -->
+      <div class="flex flex-col items-center justify-center -mt-6">
+        <button type="button" onclick="switchTab('families')" data-bnav="families" class="w-14 h-14 rounded-full korum-gradient text-white shadow-lg shadow-purple-700/40 border-4 border-white flex items-center justify-center transform active:scale-95 transition" title="परिवार-वार सर्वे ट्रैकर (242 परिवार)">
+          <i data-lucide="users" class="w-6 h-6"></i>
+        </button>
+        <span class="text-[10px] font-extrabold text-purple-900 mt-0.5">परिवार सर्वे</span>
+      </div>
+
+      <button type="button" onclick="switchTab('voters')" data-bnav="voters" class="bnav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-purple-700 transition">
+        <i data-lucide="ScrollText" class="w-5 h-5"></i>
+        <span class="text-[10px] sm:text-[11px] font-bold mt-0.5 truncate max-w-[68px]">मतदाता सूची</span>
+      </button>
+
+      <button type="button" onclick="switchTab('team')" data-bnav="team" class="bnav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-purple-700 transition">
+        <i data-lucide="user-check" class="w-5 h-5"></i>
+        <span class="text-[10px] sm:text-[11px] font-bold mt-0.5 truncate max-w-[68px]">मेरी टीम</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL A: ADVANCE VOTER SEARCH (उन्नत खोज - Korum Video 00:24-00:29) -->
+  <div id="advanceSearchModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-base sm:text-lg font-extrabold text-slate-900">उन्नत खोज (Advance Voter Search)</h3>
+        <button type="button" onclick="closeAdvanceSearchModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2">✕</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs sm:text-sm max-h-[80vh] overflow-y-auto">
+        <div>
+          <input type="text" id="advFirstName" placeholder="पहला नाम दर्ज करें (First Name)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+        <div>
+          <input type="text" id="advLastName" placeholder="अंतिम नाम / उपनाम दर्ज करें (जैसे: मीना, बैरवा)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+        <div>
+          <input type="text" id="advRelativeName" placeholder="रिश्तेदार (पिता / पति) का नाम दर्ज करें" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <select id="advWard" class="px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white font-semibold">
+            <option value="ALL">वार्ड (सभी)</option>
+            <option value="1">वार्ड 1</option>
+            <option value="2">वार्ड 2</option>
+            <option value="3">वार्ड 3</option>
+            <option value="4">वार्ड 4</option>
+            <option value="5">वार्ड 5</option>
+            <option value="6">वार्ड 6</option>
+            <option value="7">वार्ड 7</option>
+            <option value="8">वार्ड 8</option>
+            <option value="9">वार्ड 9</option>
+          </select>
+          <select id="advBooth" class="px-2.5 py-2.5 rounded-xl border border-slate-300 bg-white font-semibold">
+            <option value="ALL">बूथ (सभी)</option>
+            <option value="68">बूथ 68</option>
+            <option value="69">बूथ 69</option>
+            <option value="70">बूथ 70</option>
+          </select>
+          <input type="text" id="advHouseNo" placeholder="मकान नं." class="px-3 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="number" id="advSerialNo" placeholder="मतदाता क्रमांक (#)" class="px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+          <input type="text" id="advEpicNo" placeholder="EPIC / वोटर ID" class="px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+        <div>
+          <input type="text" id="advMobileNo" placeholder="मोबाइल नंबर" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none">
+        </div>
+      </div>
+      <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3">
+        <button type="button" onclick="closeAdvanceSearchModal()" class="px-4 py-2 rounded-xl text-slate-700 font-bold text-xs sm:text-sm hover:bg-slate-200">रद्द करें</button>
+        <button type="button" onclick="executeAdvanceVoterSearch()" class="px-6 py-2.5 rounded-xl korum-btn font-extrabold text-xs sm:text-sm shadow-md">खोजें</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL B: DETAILED VOTER SURVEY (मतदाता विवरण - Korum Video 00:31-00:43) -->
+  <div id="voterDetailModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden items-center justify-center p-2 sm:p-4">
+    <div class="bg-slate-100 rounded-3xl max-w-xl w-full max-h-[94vh] flex flex-col shadow-2xl border border-slate-300 overflow-hidden">
+      <!-- Top App Bar -->
+      <div class="bg-white px-4 py-3 border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="closeVoterDetailModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-800 font-bold text-lg">‹</button>
+          <h3 class="font-extrabold text-base sm:text-lg text-slate-900">मतदाता विवरण</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnVoterStarToggle" onclick="toggleActiveVoterStar()" class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-amber-500 transition" title="प्रमुख/स्टार मतदाता चिन्हित करें">
+            <span id="voterStarIcon" class="text-lg">☆</span>
+          </button>
+          <button type="button" onclick="printSingleVoterThermalSlip()" class="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-100 transition" title="मतदाता पर्ची प्रिंट करें">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Survey Body -->
+      <div class="p-3.5 sm:p-4 overflow-y-auto space-y-3.5 flex-1 text-xs sm:text-sm">
+        <!-- Card 1: Voter Identity Header -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-600">
+            <span id="vdWardText">वार्ड क्रमांक : 1</span>
+            <span id="vdSerialText">मतदाता क्रमांक : 1</span>
+          </div>
+          <div id="vdNameText" class="text-base sm:text-lg font-extrabold text-purple-800">मतदाता का नाम</div>
+          <div id="vdRelText" class="text-xs sm:text-sm font-semibold text-slate-700">रिश्तेदार का नाम : -</div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
+            <div><span class="text-slate-500">मतदाता आईडी :</span> <strong id="vdEpicText" class="font-mono text-slate-900"></strong></div>
+            <div><span class="text-slate-500">पंचायत :</span> <strong>महाराजपुरा</strong></div>
+            <div><span class="text-slate-500">घर नं. :</span> <strong id="vdHouseText"></strong></div>
+            <div><span class="text-slate-500">लिंग / आयु :</span> <strong id="vdGenderAgeText"></strong></div>
+          </div>
+          <div class="pt-1.5 text-xs text-slate-600">
+            <div><strong>मोहल्ला / सेक्शन पता :</strong> <span id="vdMohallaText"></span></div>
+            <div class="mt-0.5"><strong>बूथ पता :</strong> <span id="vdBoothText"></span></div>
+          </div>
+        </div>
+
+        <!-- Card 2: रंग चुनें (Color Code Tagging - Exact Korum Bars) -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-slate-900">रंग चुनें (Color Code)</div>
+              <div class="text-[11px] text-slate-500">इस मतदाता को रंग कोड से टैग करें</div>
+            </div>
+            <span id="vdCurrentColorBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-700">कोई रंग नहीं</span>
+          </div>
+          <div class="space-y-2">
+            <button type="button" onclick="selectVoterColorTag('A')" class="vd-color-bar w-full h-9 rounded-xl bg-emerald-200/90 hover:bg-emerald-300 border-2 border-emerald-400 flex items-center justify-between px-3 text-xs font-extrabold text-emerald-950 transition" data-col="A">
+              <span>🟢 हरा — पक्का समर्थक (Our Supporter - A)</span>
+              <span class="vd-col-check hidden">✔️</span>
+            </button>
+            <button type="button" onclick="selectVoterColorTag('B')" class="vd-color-bar w-full h-9 rounded-xl bg-rose-200/90 hover:bg-rose-300 border-2 border-rose-400 flex items-center justify-between px-3 text-xs font-extrabold text-rose-950 transition" data-col="B">
+              <span>🔴 लाल — विरोधी / प्रतिद्वंद्वी (Opponent - B)</span>
+              <span class="vd-col-check hidden">✔️</span>
+            </button>
+            <button type="button" onclick="selectVoterColorTag('C')" class="vd-color-bar w-full h-9 rounded-xl bg-amber-200/90 hover:bg-amber-300 border-2 border-amber-400 flex items-center justify-between px-3 text-xs font-extrabold text-amber-950 transition" data-col="C">
+              <span>🟡 पीला — अनिर्णीत / स्विंग (Swing / Neutral - C)</span>
+              <span class="vd-col-check hidden">✔️</span>
+            </button>
+            <button type="button" onclick="selectVoterColorTag('D')" class="vd-color-bar w-full h-9 rounded-xl bg-blue-200/90 hover:bg-blue-300 border-2 border-blue-400 flex items-center justify-between px-3 text-xs font-extrabold text-blue-950 transition" data-col="D">
+              <span>🔵 नीला — झुकाव / बंटा हुआ (Split / Incline - D)</span>
+              <span class="vd-col-check hidden">✔️</span>
+            </button>
+            <button type="button" onclick="selectVoterColorTag('VIP')" class="vd-color-bar w-full h-9 rounded-xl bg-fuchsia-200/90 hover:bg-fuchsia-300 border-2 border-fuchsia-400 flex items-center justify-between px-3 text-xs font-extrabold text-fuchsia-950 transition" data-col="VIP">
+              <span>🟣 गुलाबी — विशेष लाभार्थी / प्रभावशाली मतदाता</span>
+              <span class="vd-col-check hidden">✔️</span>
+            </button>
+          </div>
+          <div class="pt-1 flex justify-center">
+            <button type="button" onclick="selectVoterColorTag('U')" class="px-4 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              🗑️ रंग हटाएं
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: परिवार विवरण (Jump to Family) -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <div class="font-extrabold text-slate-900">परिवार</div>
+            <div id="vdFamilySummaryText" class="text-xs text-slate-500">मुखिया व सभी सदस्य देखें</div>
+          </div>
+          <button type="button" id="btnVdOpenFamily" class="px-4 py-2 rounded-xl korum-btn text-xs font-extrabold shadow-sm">विवरण देखें</button>
+        </div>
+
+        <!-- Card 4: संपर्क विवरण & On-Call Facility -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="font-extrabold text-slate-900">संपर्क विवरण (On-Call & WhatsApp)</div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="contactActiveVoter('WA')" class="w-8 h-8 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 flex items-center justify-center font-bold" title="WhatsApp पर पर्ची/संदेश भेजें">💬</button>
+              <button type="button" onclick="contactActiveVoter('CALL')" class="w-8 h-8 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center justify-center font-bold" title="सीधे कॉल करें">📞</button>
+              <button type="button" onclick="contactActiveVoter('SMS')" class="w-8 h-8 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-700 flex items-center justify-center font-bold" title="SMS भेजें">✉️</button>
+            </div>
+          </div>
+          <input type="tel" id="vdMobileInput" placeholder="मोबाइल नंबर दर्ज करें (10 अंक)..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:outline-none font-mono font-bold">
+        </div>
+
+        <!-- Card 5: मतदान स्थिति एवं समय स्लॉट (समय चुनें) -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="font-extrabold text-slate-900">मतदान समय स्लॉट एवं लाइव स्थिति</div>
+            <select id="vdTimeSlotSelect" class="px-3 py-1.5 rounded-xl korum-btn text-xs font-extrabold focus:outline-none cursor-pointer">
+              <option value="" class="bg-white text-slate-900">स्लॉट चुनें</option>
+              <option value="07:00 - 10:00 AM" class="bg-white text-slate-900">सुबह 07:00 - 10:00</option>
+              <option value="10:00 - 01:00 PM" class="bg-white text-slate-900">सुबह 10:00 - 01:00</option>
+              <option value="01:00 - 04:00 PM" class="bg-white text-slate-900">दोपहर 01:00 - 04:00</option>
+              <option value="04:00 - 06:00 PM" class="bg-white text-slate-900">शाम 04:00 - 06:00</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 cursor-pointer">
+              <input type="checkbox" id="vdSentToVoteCheck" class="w-4 h-4 accent-indigo-700">
+              <span class="text-xs font-bold text-indigo-950">मतदान हेतु भेजा गया</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 cursor-pointer">
+              <input type="checkbox" id="vdVotedCheck" class="w-4 h-4 accent-emerald-700">
+              <span class="text-xs font-bold text-emerald-950">✔️ मतदान संपन्न (Voted)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Card 6: प्रतिनिधि & लाभार्थी / पुरस्कार -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-extrabold text-slate-900 mb-1">प्रतिनिधि / सर्वेयर</label>
+            <select id="vdRepresentativeSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="">प्रतिनिधि चुनें</option>
+              <option value="ADMIN">ADMIN - मुख्य एडमिन</option>
+              <option value="MP01">MP01 - सर्वेयर 1</option>
+              <option value="MP02">MP02 - सर्वेयर 2</option>
+              <option value="MP03">MP03 - सर्वेयर 3</option>
+              <option value="MP04">MP04 - सर्वेयर 4</option>
+              <option value="MP05">MP05 - सर्वेयर 5</option>
+              <option value="MP06">MP06 - सर्वेयर 6</option>
+              <option value="MP07">MP07 - सर्वेयर 7</option>
+              <option value="MP08">MP08 - सर्वेयर 8</option>
+              <option value="MP09">MP09 - सर्वेयर 9</option>
+              <option value="MP10">MP10 - सर्वेयर 10</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-extrabold text-slate-900 mb-1">लाभार्थी / पुरस्कार योजना</label>
+            <select id="vdRewardSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="">कोई नहीं</option>
+              <option value="पेंशन योजना लाभार्थी">पेंशन योजना लाभार्थी</option>
+              <option value="आवास / पट्टा लाभार्थी">आवास / पट्टा लाभार्थी</option>
+              <option value="राशन / खाद्य सुरक्षा">राशन / खाद्य सुरक्षा</option>
+              <option value="व्यक्तिगत सहायता / सम्मान">व्यक्तिगत सहायता / सम्मान</option>
+              <option value="किसान सम्मान निधि">किसान सम्मान निधि</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Card 7: मतदाता विश्लेषण — संतोष बिंदु एवं समस्याएं (Exact Korum Video Chips) -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div class="font-extrabold text-slate-900">मतदाता विश्लेषण (संतोष बिंदु एवं समस्याएं)</div>
+
+          <div>
+            <div class="text-xs font-bold text-slate-600 mb-1.5">संतोष बिंदु (Satisfaction Points — क्लिक करके चुनें):</div>
+            <div id="vdSatisfactionChips" class="flex flex-wrap gap-1.5">
+              <button type="button" data-chip="ग्राम विकास कार्य" class="vd-sat-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ ग्राम विकास कार्य</button>
+              <button type="button" data-chip="सड़क व नाली निर्माण" class="vd-sat-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ सड़क व नाली निर्माण</button>
+              <button type="button" data-chip="नौकरी / रोजगार मदद" class="vd-sat-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ नौकरी / रोजगार मदद</button>
+              <button type="button" data-chip="सुख-दुख में व्यक्तिगत साथ" class="vd-sat-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ सुख-दुख में साथ</button>
+              <button type="button" data-chip="सरकारी योजना लाभ" class="vd-sat-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ सरकारी योजना लाभ</button>
+            </div>
+          </div>
+
+          <div class="pt-1">
+            <div class="text-xs font-bold text-slate-600 mb-1.5">प्रमुख समस्याएं / मांगें (Key Issues — क्लिक करके चुनें):</div>
+            <div id="vdIssueChips" class="flex flex-wrap gap-1.5">
+              <button type="button" data-chip="सड़क बांधकाम / मरम्मत" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ सड़क बांधकाम / मरम्मत</button>
+              <button type="button" data-chip="साफ-सफाई व नाली बाबत" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ साफ-सफाई व नाली बाबत</button>
+              <button type="button" data-chip="पानी पुरवठा / पेयजल समस्या" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ पानी पुरवठा / पेयजल बाबत</button>
+              <button type="button" data-chip="घरकुल / आवास पट्टा" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ घरकुल / आवास पट्टा</button>
+              <button type="button" data-chip="पेंशन / राशन कार्ड" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ पेंशन / राशन कार्ड</button>
+              <button type="button" data-chip="स्ट्रीट लाइट / बिजली" class="vd-iss-chip px-2.5 py-1.5 rounded-lg border border-purple-300 text-purple-900 bg-purple-50/50 text-xs font-bold transition">+ स्ट्रीट लाइट / बिजली</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8: निवास विवरण एवं व्यक्तिगत विवरण -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div>
+            <label class="block font-extrabold text-slate-900 mb-1">निवास विवरण (Residence Status)</label>
+            <select id="vdResidenceSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="निवासी">निवासी (गाँव में ही निवास करते हैं)</option>
+              <option value="प्रवासी (बाहर रहते हैं)">प्रवासी / बाहर रहते हैं (जयपुर, दौसा या अन्य शहर)</option>
+              <option value="अस्थायी / किरायेदार">अस्थायी / किरायेदार</option>
+            </select>
+          </div>
+
+          <div class="font-extrabold text-slate-900 pt-1">मतदाता व्यक्तिगत विवरण</div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-0.5">जन्मतिथि (DOB)</label>
+              <input type="date" id="vdDobInput" class="w-full px-3 py-2 rounded-xl border border-slate-300">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-0.5">विवाह की तिथि</label>
+              <input type="date" id="vdDomInput" class="w-full px-3 py-2 rounded-xl border border-slate-300">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-0.5">जाति / समाज</label>
+              <select id="vdCasteSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+                <option value="">जाति चुनें</option>
+                <option value="मीणा">मीणा</option>
+                <option value="बैरवा">बैरवा</option>
+                <option value="बलाई / वर्मा">बलाई / वर्मा</option>
+                <option value="पटेल / गुर्जर">पटेल / गुर्जर</option>
+                <option value="खाती / जांगिड़">खाती / जांगिड़</option>
+                <option value="ब्राह्मण / शर्मा">ब्राह्मण / शर्मा</option>
+                <option value="अन्य">अन्य</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 mb-0.5">व्यवसाय (Occupation)</label>
+              <select id="vdOccupationSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+                <option value="">व्यवसाय चुनें</option>
+                <option value="कृषि / किसान">कृषि / किसान</option>
+                <option value="पशुपालन / डेयरी">पशुपालन / डेयरी</option>
+                <option value="सरकारी नौकरी">सरकारी नौकरी</option>
+                <option value="प्राइवेट नौकरी">प्राइवेट नौकरी</option>
+                <option value="व्यापार / दुकान">व्यापार / दुकान</option>
+                <option value="मजदूरी / कारीगर">मजदूरी / कारीगर</option>
+                <option value="गृहिणी">गृहिणी</option>
+                <option value="विद्यार्थी">विद्यार्थी</option>
+              </select>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-[11px] font-bold text-slate-500 mb-0.5">शैक्षणिक योग्यता एवं विशेष रिमार्क</label>
+              <input type="text" id="vdEducationInput" placeholder="शिक्षा या विशेष नोट दर्ज करें..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300">
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Buttons inside Voter Detail Modal (Exact Video Style) -->
+        <div class="space-y-2 pt-1">
+          <button type="button" onclick="printSingleVoterThermalSlip()" class="w-full py-3 rounded-2xl bg-white hover:bg-purple-50 border-2 border-purple-300 text-purple-900 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="printer" class="w-4 h-4 text-purple-700"></i> मतदाता पर्ची प्रिंट करें (Bluetooth / A4 Slip)
+          </button>
+          <button type="button" onclick="saveDetailedVoterSurvey()" class="w-full py-3.5 rounded-2xl korum-btn font-extrabold text-sm sm:text-base shadow-lg">
+            सबमिट करें
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL C: SAVE SUCCESS POPUP (सफल — मतदाता जानकारी सफलतापूर्वक अपडेट हो गई! - Video 00:43) -->
+  <div id="saveSuccessPopup" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl border border-slate-200 space-y-4">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 mx-auto flex items-center justify-center text-3xl font-extrabold">
+        ✓
+      </div>
+      <div>
+        <h4 class="text-lg font-extrabold text-slate-900">सफल</h4>
+        <p id="saveSuccessPopupText" class="text-xs sm:text-sm text-slate-600 mt-1">मतदाता जानकारी सफलतापूर्वक अपडेट हो गई!</p>
+      </div>
+      <button type="button" onclick="closeSaveSuccessPopup()" class="w-full py-2.5 rounded-xl korum-btn font-extrabold text-sm shadow-md">
+        OK
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL D: BLUETOOTH THERMAL PRINTER SETUP (Print Setup - Video 00:44-00:51) -->
+  <div id="printSetupModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="font-extrabold text-base text-slate-900">🖨️ Print Setup (ब्लूटूथ थर्मल व पर्ची सेटअप)</h3>
+          <p class="text-[11px] text-slate-500">मतदाता पर्ची पर छपने की तारीख, प्रत्याशी नाम व चुनाव चिन्ह सेट करें</p>
+        </div>
+        <button type="button" onclick="closePrintSetupModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2">✕</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">मतदान दिनांक (Election Date)</label>
+          <input type="date" id="psElectionDate" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">प्रत्याशी / उम्मीदवार का नाम (Candidate Name)</label>
+          <input type="text" id="psCandidate1" placeholder="सरपंच प्रत्याशी का नाम दर्ज करें..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">चुनाव चिन्ह / अपील संदेश (Symbol / Slogan)</label>
+          <input type="text" id="psSlogan" placeholder="जैसे: ग्राम विकास हेतु अपना अमूल्य वोट दें..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">पर्ची प्रिंट साइज (Printer Format)</label>
+          <select id="psPaperWidth" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white font-semibold">
+            <option value="58mm">58mm Bluetooth Thermal Printer (मोबाइल पॉकेट प्रिंटर)</option>
+            <option value="80mm">80mm Thermal POS Printer</option>
+            <option value="A4">A4 Official Voter Parchi</option>
+          </select>
+        </div>
+      </div>
+      <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2">
+        <button type="button" onclick="closePrintSetupModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs">Cancel</button>
+        <button type="button" onclick="savePrintSetupConfig()" class="px-5 py-2 rounded-xl korum-btn font-extrabold text-xs shadow-md">Save Setup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL E: ADD TEAM MEMBER (टीम सदस्य जोड़ें - Video 00:55-00:58) -->
+  <div id="addTeamModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="font-extrabold text-base text-slate-900">‹ टीम सदस्य जोड़ें</h3>
+        <button type="button" onclick="closeAddTeamMemberModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2">✕</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs sm:text-sm max-h-[82vh] overflow-y-auto">
+        <div>
+          <div class="font-extrabold text-slate-800 mb-1.5">भूमिका (Role चुनें)</div>
+          <div class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">उच्च प्राधिकारी</span><input type="radio" name="tmRole" value="उच्च प्राधिकारी" class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">एडमिन मैनेजर</span><input type="radio" name="tmRole" value="एडमिन मैनेजर" class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">वार्ड प्रभारी</span><input type="radio" name="tmRole" value="वार्ड प्रभारी" class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">यादीभाग / बूथ प्रमुख</span><input type="radio" name="tmRole" value="यादीभाग प्रमुख" class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">सर्वेयर (Surveyor)</span><input type="radio" name="tmRole" value="सर्वेयर" checked class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">पोलिंग एजेंट / टेबल मास्टर</span><input type="radio" name="tmRole" value="पोलिंग एजेंट" class="w-4 h-4 accent-purple-700"></label>
+            <label class="flex items-center justify-between cursor-pointer py-1"><span class="font-semibold">स्वयंसेवक (Volunteer)</span><input type="radio" name="tmRole" value="स्वयंसेवक" class="w-4 h-4 accent-purple-700"></label>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">मोबाइल नंबर</label>
+          <input type="tel" id="tmMobileInput" placeholder="कार्यकर्ता का मोबाइल नंबर..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono font-bold">
+        </div>
+        <div class="flex items-center gap-4 py-1">
+          <span class="font-bold text-slate-700">लिंग :</span>
+          <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="tmGender" value="M" checked class="accent-purple-700"> पुरुष</label>
+          <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="tmGender" value="F" class="accent-purple-700"> महिला</label>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">प्रथम नाम</label>
+            <input type="text" id="tmFirstName" placeholder="First Name" class="w-full px-3 py-2 rounded-xl border border-slate-300">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">अंतिम नाम</label>
+            <input type="text" id="tmLastName" placeholder="Last Name" class="w-full px-3 py-2 rounded-xl border border-slate-300">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">वार्ड क्रमांक</label>
+            <select id="tmWardSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="1">वार्ड 1</option>
+              <option value="2">वार्ड 2</option>
+              <option value="3">वार्ड 3</option>
+              <option value="4">वार्ड 4</option>
+              <option value="5">वार्ड 5</option>
+              <option value="6">वार्ड 6</option>
+              <option value="7">वार्ड 7</option>
+              <option value="8">वार्ड 8</option>
+              <option value="9">वार्ड 9</option>
+              <option value="ALL">संपूर्ण पंचायत</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">बूथ क्रमांक</label>
+            <select id="tmBoothSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="68">बूथ 68 (कमरा 1)</option>
+              <option value="69">बूथ 69 (कमरा 2)</option>
+              <option value="70">बूथ 70 (कमरा 3)</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" onclick="saveNewTeamMember()" class="w-full py-3 rounded-2xl korum-btn font-extrabold text-sm shadow-md mt-2">
+          सबमिट करें
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL F: WHATSAPP BROADCAST CENTER (WhatsApp Broadcast - Video 01:24-01:33) -->
+  <div id="broadcastModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="bg-emerald-800 text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h3 class="font-extrabold text-base">💬 WhatsApp ब्रॉडकास्ट एवं बल्क संदेश सेंटर</h3>
+          <p class="text-[11px] text-emerald-100">मतदाताओं और कार्यकर्ताओं को शुभकामनाएं, निमंत्रण व चुनावी अपील भेजें</p>
+        </div>
+        <button type="button" onclick="closeBroadcastModal()" class="text-emerald-100 hover:text-white text-lg font-bold px-2">✕</button>
+      </div>
+      <div class="p-5 space-y-3.5 text-xs sm:text-sm">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">लक्ष्य समूह (Target Group)</label>
+            <select id="bcTargetGroup" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="ALL">सभी मतदाता (2,527)</option>
+              <option value="A">🟢 हमारे समर्थक (A)</option>
+              <option value="C">🟡 अनिर्णीत / स्विंग (C)</option>
+              <option value="PENDING">⏳ मतदान बाकी मतदाता</option>
+              <option value="TEAM">👥 सभी टीम सदस्य</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">संदेश टेम्पलेट चुनें</label>
+            <select id="bcTemplateSelect" onchange="applyBroadcastTemplate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="APPEAL">🙏 जनसंपर्क एवं समर्थन अपील</option>
+              <option value="POLLDAY">🗳️ मतदान दिवस रिमाइंडर</option>
+              <option value="MEETING">🤝 ग्राम चौपाल / बैठक निमंत्रण</option>
+              <option value="GREETING">🎉 त्योहार / शुभकामना संदेश</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ब्रॉडकास्ट संदेश (Edit Message)</label>
+          <textarea id="bcMessageText" rows="4" class="w-full p-3 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">राम-राम सा! 🙏
+ग्राम पंचायत महाराजपुरा के सर्वांगीण विकास, पक्की सड़क, पेयजल एवं पारदर्शी व्यवस्था के लिए आगामी पंचायत चुनाव में आपका अमूल्य आशीर्वाद एवं समर्थन प्रदान करें।
+— ग्राम पंचायत महाराजपुरा विकास टीम</textarea>
+        </div>
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <button type="button" onclick="copyBroadcastMessage()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 font-bold text-xs">📋 संदेश कॉपी करें</button>
+          <button type="button" onclick="launchWhatsappBroadcast()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm flex items-center gap-1.5 shadow-md">
+            💬 WhatsApp पर ब्रॉडकास्ट भेजें
+          </button>
         </div>
       </div>
     </div>
@@ -1612,7 +2613,29 @@
     // TAB 2: RENDER VOTERS (WITH PAGINATION FOR SPEED)
     // ============================================================================
     let currentVoterPage = 1;
-    const VOTERS_PER_PAGE = 100;
+    const VOTERS_PER_PAGE = 60;
+    let voterDisplayMode = 'CARDS'; // 'CARDS' (Korum Mobile Style) or 'TABLE'
+    let advSearchCriteria = null;
+
+    function setVoterDisplayMode(mode) {
+      voterDisplayMode = mode;
+      const cardGrid = document.getElementById('votersCardGrid');
+      const tableWrap = document.getElementById('votersTableWrap');
+      const btnCards = document.getElementById('btnVoterViewCards');
+      const btnTable = document.getElementById('btnVoterViewTable');
+      if (mode === 'CARDS') {
+        cardGrid?.classList.remove('hidden');
+        tableWrap?.classList.add('hidden');
+        if (btnCards) btnCards.className = 'px-2.5 py-1 rounded-lg text-xs font-extrabold bg-purple-700 text-white';
+        if (btnTable) btnTable.className = 'px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700';
+      } else {
+        cardGrid?.classList.add('hidden');
+        tableWrap?.classList.remove('hidden');
+        if (btnTable) btnTable.className = 'px-2.5 py-1 rounded-lg text-xs font-extrabold bg-purple-700 text-white';
+        if (btnCards) btnCards.className = 'px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700';
+      }
+      renderVoters();
+    }
 
     function renderVoters() {
       const q = (document.getElementById('voterSearchInput').value || '').trim().toLowerCase();
@@ -1624,15 +2647,34 @@
       let filtered = RAW_DATA.voters.filter(v => {
         if (wardFilter !== 'ALL' && String(v.w) !== wardFilter) return false;
         const vst = getVoterState(v);
+        const rawVst = appState.voters[v.id] || {};
         if (catFilter !== 'ALL' && vst.cat !== catFilter) return false;
         if (castFilter === 'CAST' && !vst.voted) return false;
         if (castFilter === 'PENDING' && vst.voted) return false;
+        if (castFilter === 'SENT' && !rawVst.sentToVote) return false;
+
+        if (advSearchCriteria) {
+          if (advSearchCriteria.firstName && !v.n.toLowerCase().includes(advSearchCriteria.firstName)) return false;
+          if (advSearchCriteria.lastName && !v.n.toLowerCase().includes(advSearchCriteria.lastName)) return false;
+          if (advSearchCriteria.relName && !v.rn.toLowerCase().includes(advSearchCriteria.relName)) return false;
+          if (advSearchCriteria.ward !== 'ALL' && String(v.w) !== advSearchCriteria.ward) return false;
+          if (advSearchCriteria.booth !== 'ALL') {
+            const wObj = wardByNum[v.w] || {};
+            if (!wObj.b || !wObj.b.startsWith(advSearchCriteria.booth)) return false;
+          }
+          if (advSearchCriteria.houseNo && String(v.h).toLowerCase() !== advSearchCriteria.houseNo) return false;
+          if (advSearchCriteria.serialNo && String(v.s) !== advSearchCriteria.serialNo) return false;
+          if (advSearchCriteria.epicNo && !v.ep.toLowerCase().includes(advSearchCriteria.epicNo)) return false;
+          if (advSearchCriteria.mobileNo && !(rawVst.mobile || '').includes(advSearchCriteria.mobileNo)) return false;
+        }
+
         if (q) {
           const match = v.n.toLowerCase().includes(q) ||
                         v.rn.toLowerCase().includes(q) ||
                         v.ep.toLowerCase().includes(q) ||
                         String(v.h).toLowerCase().includes(q) ||
-                        String(v.s).includes(q);
+                        String(v.s).includes(q) ||
+                        (rawVst.mobile || '').includes(q);
           if (!match) return false;
         }
         return true;
@@ -1651,9 +2693,72 @@
       const startIdx = (currentVoterPage - 1) * VOTERS_PER_PAGE;
       const pageItems = filtered.slice(startIdx, startIdx + VOTERS_PER_PAGE);
 
-      document.getElementById('voterResultSummary').textContent = `दिखाए जा रहे मतदाता: ${filtered.length.toLocaleString('hi-IN')} (पृष्ठ ${currentVoterPage} / ${totalPages})`;
+      document.getElementById('voterResultSummary').textContent = `Showing ${filtered.length.toLocaleString('hi-IN')}/${RAW_DATA.voters.length.toLocaleString('hi-IN')} (पृष्ठ ${currentVoterPage}/${totalPages})`;
       document.getElementById('pageIndicator').textContent = `पृष्ठ ${currentVoterPage} / ${totalPages}`;
 
+      // 1. Render Korum-Style Voter Cards (Exact Match to Video 00:18-00:22)
+      const cardGrid = document.getElementById('votersCardGrid');
+      if (cardGrid) {
+        const borderColors = {
+          'A': 'border-l-8 border-l-emerald-500',
+          'B': 'border-l-8 border-l-rose-500',
+          'C': 'border-l-8 border-l-amber-400',
+          'D': 'border-l-8 border-l-blue-500',
+          'VIP': 'border-l-8 border-l-fuchsia-500',
+          'U': 'border-l-4 border-l-slate-300'
+        };
+        cardGrid.innerHTML = pageItems.map(v => {
+          const vst = getVoterState(v);
+          const rawVst = appState.voters[v.id] || {};
+          const wObj = wardByNum[v.w] || {};
+          const boothNum = (wObj.b || '').split(' ')[0] || v.w;
+          const surveyedBy = rawVst.surveyedBy || (vst.cat !== 'C' ? (multiDB.accounts[activeWorkspaceUser]?.name || activeWorkspaceUser) : '');
+          const colClass = borderColors[rawVst.colorTag || vst.cat] || borderColors.U;
+
+          return `
+            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 hover:border-purple-400 transition ${colClass} flex items-start gap-3">
+              <input type="checkbox" ${vst.voted ? 'checked' : ''} onchange="setVoterState('${v.id}', {voted: this.checked}); renderVoters();" class="mt-1.5 w-4 h-4 accent-purple-700 rounded cursor-pointer shrink-0" title="मतदान संपन्न चिन्हित करें">
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-bold text-slate-600 flex items-center justify-between gap-1 flex-wrap">
+                  <span>पंचायत : महाराजपुरा | वार्ड क्रमांक : ${v.w} | क्रमांक : ${v.s}</span>
+                  ${rawVst.starred ? '<span class="text-amber-500 font-extrabold">★ VIP</span>' : ''}
+                </div>
+                <div class="flex items-center justify-between gap-2 mt-1">
+                  <button type="button" onclick="openVoterDetailModal('${v.id}')" class="text-base font-extrabold text-purple-800 hover:underline text-left truncate">
+                    ${v.n}
+                  </button>
+                  <span class="text-xs font-extrabold text-slate-800 shrink-0">${v.g} (${v.a})</span>
+                </div>
+                <div class="text-xs text-slate-700 font-medium mt-0.5">
+                  रिश्तेदार (${v.rt}) : <strong>${v.rn}</strong> | मकान : <strong>${v.h}</strong>
+                </div>
+                <div class="text-xs text-slate-600 mt-1 flex items-center gap-3 flex-wrap">
+                  <span>बूथ क्रमांक : <strong>${boothNum}</strong></span>
+                  <span>EPIC : <strong class="font-mono">${v.ep}</strong></span>
+                  ${rawVst.mobile ? `<span class="text-emerald-700 font-bold">📞 ${rawVst.mobile}</span>` : ''}
+                </div>
+                ${surveyedBy ? `<div class="text-[11px] font-bold text-slate-700 mt-1">द्वारा सर्वे : <span class="text-purple-800">${surveyedBy}</span></div>` : ''}
+                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="quickPrintVoterSlipById('${v.id}')" class="w-8 h-8 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 flex items-center justify-center transition" title="वोटर पर्ची प्रिंट करें">
+                      🖨️
+                    </button>
+                    <button type="button" onclick="openFamilyModal('${v.fid}')" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold">
+                      🏠 परिवार
+                    </button>
+                    ${vst.voted ? '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">✔️ वोट पड़ गया</span>' : ''}
+                  </div>
+                  <button type="button" onclick="openVoterDetailModal('${v.id}')" class="px-4 py-1.5 rounded-xl korum-btn text-xs font-extrabold shadow-sm flex items-center gap-1">
+                    विवरण ›
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. Render Table View
       const tbody = document.getElementById('votersTableBody');
       tbody.innerHTML = pageItems.map(v => {
         const vst = getVoterState(v);
@@ -1663,7 +2768,9 @@
             <td class="py-2 px-3">
               <button onclick="openFamilyModal('${v.fid}')" class="text-blue-700 hover:underline font-semibold">मकान ${v.h}</button>
             </td>
-            <td class="py-2 px-3 font-bold text-slate-900">${v.n}</td>
+            <td class="py-2 px-3">
+              <button onclick="openVoterDetailModal('${v.id}')" class="font-bold text-purple-800 hover:underline text-left">${v.n}</button>
+            </td>
             <td class="py-2 px-3 text-slate-600">${v.rt}: ${v.rn}</td>
             <td class="py-2 px-3 text-slate-600">${v.a} / ${v.g === 'M' ? 'पु' : 'म'}</td>
             <td class="py-2 px-3 font-mono text-xs text-slate-600">${v.ep}</td>
@@ -1674,10 +2781,11 @@
                 <option value="B" ${vst.cat === 'B' ? 'selected' : ''}>❌ B विरोधी</option>
               </select>
             </td>
-            <td class="py-2 px-3 text-center">
-              <button onclick="setVoterState('${v.id}', {voted: ${!vst.voted}}); renderVoters();" class="px-2.5 py-1 rounded-lg text-xs font-bold transition ${vst.voted ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">
-                ${vst.voted ? '✔️ वोट पड़ गया' : '⏳ बाकी है'}
+            <td class="py-2 px-3 text-center flex items-center justify-center gap-1.5">
+              <button onclick="setVoterState('${v.id}', {voted: ${!vst.voted}}); renderVoters();" class="px-2 py-1 rounded-lg text-xs font-bold transition ${vst.voted ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">
+                ${vst.voted ? '✔️ वोट पड़ा' : '⏳ बाकी'}
               </button>
+              <button onclick="openVoterDetailModal('${v.id}')" class="px-2.5 py-1 rounded-lg korum-btn text-xs font-bold">विवरण ›</button>
             </td>
           </tr>
         `;
@@ -2583,27 +3691,52 @@
     // ============================================================================
     // TABS & EVENT LISTENERS
     // ============================================================================
-    let currentTab = 'families';
-    document.querySelectorAll('.nav-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        currentTab = btn.getAttribute('data-tab');
-        document.querySelectorAll('.nav-tab').forEach(b => {
+    let currentTab = 'home';
+
+    function switchTab(targetTab) {
+      currentTab = targetTab;
+      document.querySelectorAll('.nav-tab').forEach(b => {
+        const t = b.getAttribute('data-tab');
+        if (t === currentTab) {
+          b.classList.add('tab-active');
+          b.classList.remove('text-slate-700');
+        } else {
           b.classList.remove('tab-active');
           if (b.id !== 'tabBtnAdminMaster') b.classList.add('text-slate-700');
-        });
-        btn.classList.add('tab-active');
-        btn.classList.remove('text-slate-700');
+        }
+      });
 
-        document.getElementById('view-families').classList.toggle('hidden', currentTab !== 'families');
-        document.getElementById('view-voters').classList.toggle('hidden', currentTab !== 'voters');
-        document.getElementById('view-dashboard').classList.toggle('hidden', currentTab !== 'dashboard');
-        document.getElementById('view-admin').classList.toggle('hidden', currentTab !== 'admin');
-        document.getElementById('view-printcenter')?.classList.toggle('hidden', currentTab !== 'printcenter');
+      document.querySelectorAll('.bnav-btn').forEach(b => {
+        const t = b.getAttribute('data-bnav');
+        if (t === currentTab) {
+          b.classList.add('bottom-nav-active');
+        } else {
+          b.classList.remove('bottom-nav-active');
+        }
+      });
 
-        if (currentTab === 'voters') renderVoters();
-        if (currentTab === 'dashboard') renderDashboard();
-        if (currentTab === 'admin') renderAdminControlView();
-        if (currentTab === 'printcenter') renderPrintCenter();
+      const allViews = ['home', 'families', 'voters', 'dashboard', 'admin', 'printcenter', 'reports', 'warroom', 'team'];
+      allViews.forEach(vName => {
+        const el = document.getElementById('view-' + vName);
+        if (el) el.classList.toggle('hidden', currentTab !== vName);
+      });
+
+      if (currentTab === 'home') renderHomeDashboard();
+      if (currentTab === 'families') renderFamilies();
+      if (currentTab === 'voters') renderVoters();
+      if (currentTab === 'dashboard') renderDashboard();
+      if (currentTab === 'admin') renderAdminControlView();
+      if (currentTab === 'printcenter') renderPrintCenter();
+      if (currentTab === 'reports') renderVoterReportsView();
+      if (currentTab === 'warroom') renderWarRoomView();
+      if (currentTab === 'team') renderTeamManagementView();
+      refreshIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.getAttribute('data-tab'));
       });
     });
 
@@ -3048,13 +4181,1045 @@
     document.getElementById('btnPrintCurrentService')?.addEventListener('click', openPrintableServiceWindow);
     document.getElementById('btnPrintServiceSecondary')?.addEventListener('click', openPrintableServiceWindow);
 
+    // ============================================================================
+    // KORUM SMART HOME DASHBOARD, SENTIMENT DONUT & BOOTH MONITORING
+    // ============================================================================
+    function renderHomeDashboard() {
+      if (!currentLoggedInUser) return;
+      const acc = multiDB.accounts[currentLoggedInUser] || {};
+      const handle = acc.username || currentLoggedInUser;
+
+      const nameEl = document.getElementById('homeProfileName');
+      if (nameEl) nameEl.textContent = acc.name || handle;
+
+      const badgeEl = document.getElementById('homeProfileRoleBadge');
+      if (badgeEl) badgeEl.textContent = `@${handle} (${currentLoggedInUser})`;
+
+      const avatarImg = document.getElementById('homeProfileAvatarImg');
+      const avatarIcon = document.getElementById('homeProfileAvatarIcon');
+      if (avatarImg && avatarIcon) {
+        if (acc.avatar && acc.avatar.startsWith('data:image')) {
+          avatarImg.src = acc.avatar;
+          avatarImg.classList.remove('hidden');
+          avatarIcon.classList.add('hidden');
+        } else {
+          avatarImg.classList.add('hidden');
+          avatarIcon.classList.remove('hidden');
+        }
+      }
+
+      const wardVal = document.getElementById('homeWardFilterSelect')?.value || 'ALL';
+      const fams = wardVal === 'ALL' ? RAW_DATA.families : RAW_DATA.families.filter(f => String(f.w) === wardVal);
+      const vtrs = wardVal === 'ALL' ? RAW_DATA.voters : RAW_DATA.voters.filter(v => String(v.w) === wardVal);
+
+      const totV = vtrs.length;
+      const maleV = vtrs.filter(v => v.g === 'M').length;
+      const femV = vtrs.filter(v => v.g === 'F').length;
+
+      document.getElementById('homeStatTotal').textContent = totV.toLocaleString('hi-IN');
+      document.getElementById('homeStatMale').textContent = maleV.toLocaleString('hi-IN');
+      document.getElementById('homeStatFemale').textContent = femV.toLocaleString('hi-IN');
+      document.getElementById('homeStatFamilies').textContent = fams.length.toLocaleString('hi-IN');
+
+      // Calculate Sentiment Counts (Green A, Red B, Yellow C, Blue D, Unsurveyed U)
+      let cA = 0, cB = 0, cC = 0, cD = 0, cU = 0;
+      fams.forEach(f => {
+        const st = getFamState(f.id);
+        if (st.cat === 'A') cA += f.tot;
+        else if (st.cat === 'B') cB += f.tot;
+        else if (st.cat === 'C') cC += f.tot;
+        else if (st.cat === 'D') {
+          cA += st.our;
+          cB += st.opp;
+          cD += st.swing;
+        } else {
+          cU += f.tot;
+        }
+      });
+
+      const totalCheck = Math.max(1, cA + cB + cC + cD + cU);
+      const segments = [
+        { label: 'समर्थक (Favorable - A)', count: cA, color: '#10B981', badge: 'bg-emerald-500' },
+        { label: 'विरोधी (Against - B)', count: cB, color: '#EF4444', badge: 'bg-rose-500' },
+        { label: 'अनिर्णीत (Swing - C)', count: cC, color: '#F59E0B', badge: 'bg-amber-500' },
+        { label: 'बंटा हुआ (Split - D)', count: cD, color: '#3B82F6', badge: 'bg-blue-500' },
+        { label: 'सर्वे बाकी (Neutral)', count: cU, color: '#94A3B8', badge: 'bg-slate-400' }
+      ];
+
+      // Build SVG Conic/Donut representation
+      let cumPct = 0;
+      const gradStops = segments.map(s => {
+        const start = cumPct;
+        const pct = (s.count / totalCheck) * 100;
+        cumPct += pct;
+        return `${s.color} ${start.toFixed(1)}% ${cumPct.toFixed(1)}%`;
+      }).join(', ');
+
+      const donutWrap = document.getElementById('homeSentimentDonutWrap');
+      if (donutWrap) {
+        const surveyedPct = Math.round(((totalCheck - cU) / totalCheck) * 100);
+        donutWrap.innerHTML = `
+          <div class="w-32 h-32 rounded-full flex items-center justify-center shadow-inner" style="background: conic-gradient(${gradStops});">
+            <div class="w-20 h-20 rounded-full bg-white flex flex-col items-center justify-center text-center shadow">
+              <span class="text-xs font-bold text-slate-400">सर्वे</span>
+              <span class="text-base font-extrabold text-purple-900">${surveyedPct}%</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const legendEl = document.getElementById('homeSentimentLegend');
+      if (legendEl) {
+        legendEl.innerHTML = segments.map(s => `
+          <div class="p-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full ${s.badge} shrink-0"></span>
+            <div class="min-w-0">
+              <div class="text-sm font-extrabold text-slate-900">${s.count.toLocaleString('hi-IN')}</div>
+              <div class="text-[10px] text-slate-500 truncate">${s.label}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Booth Monitoring List (Booth 68, 69, 70)
+      const boothListEl = document.getElementById('homeBoothMonitoringList');
+      if (boothListEl) {
+        const booths = [
+          { num: '68', name: 'बूथ 68 — रा.उ.मा.वि. महाराजपुरा कमरा नं. 1', wards: [1, 5, 7] },
+          { num: '69', name: 'बूथ 69 — रा.उ.मा.वि. महाराजपुरा कमरा नं. 2', wards: [2, 6, 8] },
+          { num: '70', name: 'बूथ 70 — रा.उ.मा.वि. महाराजपुरा कमरा नं. 3', wards: [3, 4, 9] }
+        ];
+        boothListEl.innerHTML = booths.map(b => {
+          const bVoters = RAW_DATA.voters.filter(v => b.wards.includes(v.w));
+          const bVoted = bVoters.filter(v => getVoterState(v).voted).length;
+          const bPct = ((bVoted / Math.max(1, bVoters.length)) * 100).toFixed(1);
+          return `
+            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-extrabold text-slate-900">${b.name} (वार्ड ${b.wards.join(', ')})</span>
+                <span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-900 font-extrabold">${bVoted} / ${bVoters.length} (${bPct}%)</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-purple-600 to-emerald-500 rounded-full" style="width: ${Math.min(100, Math.max(3, bPct))}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    document.getElementById('homeWardFilterSelect')?.addEventListener('change', renderHomeDashboard);
+    document.getElementById('btnHomeQuickSearchGo')?.addEventListener('click', () => {
+      const q = document.getElementById('homeQuickSearchInput')?.value || '';
+      document.getElementById('voterSearchInput').value = q;
+      currentVoterPage = 1;
+      switchTab('voters');
+    });
+    document.getElementById('homeQuickSearchInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('btnHomeQuickSearchGo')?.click();
+      }
+    });
+
+    // ============================================================================
+    // ADVANCE VOTER SEARCH MODAL (उन्नत खोज)
+    // ============================================================================
+    function openAdvanceSearchModal() {
+      const m = document.getElementById('advanceSearchModal');
+      m?.classList.remove('hidden');
+      m?.classList.add('flex');
+    }
+
+    function closeAdvanceSearchModal() {
+      const m = document.getElementById('advanceSearchModal');
+      m?.classList.add('hidden');
+      m?.classList.remove('flex');
+    }
+
+    function executeAdvanceVoterSearch() {
+      advSearchCriteria = {
+        firstName: (document.getElementById('advFirstName')?.value || '').trim().toLowerCase(),
+        lastName: (document.getElementById('advLastName')?.value || '').trim().toLowerCase(),
+        relName: (document.getElementById('advRelativeName')?.value || '').trim().toLowerCase(),
+        ward: document.getElementById('advWard')?.value || 'ALL',
+        booth: document.getElementById('advBooth')?.value || 'ALL',
+        houseNo: (document.getElementById('advHouseNo')?.value || '').trim().toLowerCase(),
+        serialNo: (document.getElementById('advSerialNo')?.value || '').trim(),
+        epicNo: (document.getElementById('advEpicNo')?.value || '').trim().toLowerCase(),
+        mobileNo: (document.getElementById('advMobileNo')?.value || '').trim()
+      };
+      document.getElementById('btnResetAdvSearch')?.classList.remove('hidden');
+      closeAdvanceSearchModal();
+      currentVoterPage = 1;
+      switchTab('voters');
+      showToast('🔍 उन्नत खोज के परिणाम दिखाए जा रहे हैं');
+    }
+
+    function resetAdvanceVoterSearch() {
+      advSearchCriteria = null;
+      ['advFirstName', 'advLastName', 'advRelativeName', 'advHouseNo', 'advSerialNo', 'advEpicNo', 'advMobileNo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      if (document.getElementById('advWard')) document.getElementById('advWard').value = 'ALL';
+      if (document.getElementById('advBooth')) document.getElementById('advBooth').value = 'ALL';
+      document.getElementById('btnResetAdvSearch')?.classList.add('hidden');
+      currentVoterPage = 1;
+      renderVoters();
+    }
+
+    // ============================================================================
+    // DETAILED VOTER SURVEY MODAL (मतदाता विवरण - Korum Video 00:31-00:43)
+    // ============================================================================
+    let activeDetailVoterId = null;
+    let tempVoterColorTag = 'U';
+    let tempVoterStarred = false;
+    let tempSatisfactions = new Set();
+    let tempIssues = new Set();
+
+    const voterByIdMap = {};
+    RAW_DATA.voters.forEach(v => { voterByIdMap[v.id] = v; });
+
+    function openVoterDetailModal(vid) {
+      const v = voterByIdMap[vid];
+      if (!v) return;
+      activeDetailVoterId = vid;
+      const vst = getVoterState(v);
+      const rawVst = appState.voters[vid] || {};
+      const fam = familyById[v.fid] || {};
+      const wObj = wardByNum[v.w] || {};
+
+      document.getElementById('vdWardText').textContent = `वार्ड क्रमांक : ${v.w}`;
+      document.getElementById('vdSerialText').textContent = `मतदाता क्रमांक : #${v.s}`;
+      document.getElementById('vdNameText').textContent = v.n;
+      document.getElementById('vdRelText').textContent = `रिश्तेदार का नाम (${v.rt}) : ${v.rn}`;
+      document.getElementById('vdEpicText').textContent = v.ep || 'उपलब्ध नहीं';
+      document.getElementById('vdHouseText').textContent = v.h;
+      document.getElementById('vdGenderAgeText').textContent = `${v.g === 'M' ? 'Male (पुरुष)' : 'Female (महिला)'} (${v.a})`;
+      document.getElementById('vdMohallaText').textContent = `${v.mh} (वार्ड ${v.w})`;
+      document.getElementById('vdBoothText').textContent = wObj.b || '';
+
+      document.getElementById('vdFamilySummaryText').textContent = `मुखिया: ${fam.hd || v.n} | कुल सदस्य: ${fam.tot || 1} वोट`;
+      document.getElementById('btnVdOpenFamily').onclick = () => {
+        closeVoterDetailModal();
+        openFamilyModal(v.fid);
+      };
+
+      tempVoterStarred = Boolean(rawVst.starred);
+      updateVoterStarUI();
+
+      tempVoterColorTag = rawVst.colorTag || vst.cat || 'U';
+      selectVoterColorTag(tempVoterColorTag, true);
+
+      document.getElementById('vdMobileInput').value = rawVst.mobile || (appState.families[v.fid]?.note || '');
+      document.getElementById('vdTimeSlotSelect').value = rawVst.timeSlot || '';
+      document.getElementById('vdSentToVoteCheck').checked = Boolean(rawVst.sentToVote);
+      document.getElementById('vdVotedCheck').checked = Boolean(vst.voted);
+      document.getElementById('vdRepresentativeSelect').value = rawVst.surveyedBy || currentLoggedInUser || '';
+      document.getElementById('vdRewardSelect').value = rawVst.reward || '';
+      document.getElementById('vdResidenceSelect').value = rawVst.residence || 'निवासी';
+      document.getElementById('vdDobInput').value = rawVst.dob || '';
+      document.getElementById('vdDomInput').value = rawVst.dom || '';
+      document.getElementById('vdCasteSelect').value = rawVst.caste || '';
+      document.getElementById('vdOccupationSelect').value = rawVst.occupation || '';
+      document.getElementById('vdEducationInput').value = rawVst.education || '';
+
+      tempSatisfactions = new Set(Array.isArray(rawVst.satisfactions) ? rawVst.satisfactions : []);
+      tempIssues = new Set(Array.isArray(rawVst.issues) ? rawVst.issues : []);
+      refreshVoterChipsUI();
+
+      const modal = document.getElementById('voterDetailModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      refreshIcons();
+    }
+
+    function closeVoterDetailModal() {
+      const modal = document.getElementById('voterDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function updateVoterStarUI() {
+      const icon = document.getElementById('voterStarIcon');
+      if (icon) {
+        icon.textContent = tempVoterStarred ? '★' : '☆';
+        icon.className = tempVoterStarred ? 'text-xl text-amber-500' : 'text-xl text-slate-400';
+      }
+    }
+
+    function toggleActiveVoterStar() {
+      tempVoterStarred = !tempVoterStarred;
+      updateVoterStarUI();
+    }
+
+    function selectVoterColorTag(colCode, silent = false) {
+      tempVoterColorTag = colCode;
+      const labels = {
+        'A': '🟢 समर्थक (A)',
+        'B': '🔴 विरोधी (B)',
+        'C': '🟡 अनिर्णीत (C)',
+        'D': '🔵 बंटा/झुकाव (D)',
+        'VIP': '🟣 विशेष लाभार्थी',
+        'U': 'कोई रंग नहीं'
+      };
+      const badge = document.getElementById('vdCurrentColorBadge');
+      if (badge) badge.textContent = labels[colCode] || 'कोई रंग नहीं';
+
+      document.querySelectorAll('.vd-color-bar').forEach(btn => {
+        const c = btn.getAttribute('data-col');
+        const chk = btn.querySelector('.vd-col-check');
+        if (c === colCode) {
+          btn.classList.add('ring-2', 'ring-purple-700');
+          chk?.classList.remove('hidden');
+        } else {
+          btn.classList.remove('ring-2', 'ring-purple-700');
+          chk?.classList.add('hidden');
+        }
+      });
+    }
+
+    function refreshVoterChipsUI() {
+      document.querySelectorAll('.vd-sat-chip').forEach(btn => {
+        const val = btn.getAttribute('data-chip');
+        if (tempSatisfactions.has(val)) {
+          btn.classList.add('chip-selected');
+          btn.textContent = `✓ ${val}`;
+        } else {
+          btn.classList.remove('chip-selected');
+          btn.textContent = `+ ${val}`;
+        }
+      });
+      document.querySelectorAll('.vd-iss-chip').forEach(btn => {
+        const val = btn.getAttribute('data-chip');
+        if (tempIssues.has(val)) {
+          btn.classList.add('chip-selected');
+          btn.textContent = `✓ ${val}`;
+        } else {
+          btn.classList.remove('chip-selected');
+          btn.textContent = `+ ${val}`;
+        }
+      });
+    }
+
+    document.querySelectorAll('.vd-sat-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-chip');
+        if (tempSatisfactions.has(val)) tempSatisfactions.delete(val);
+        else tempSatisfactions.add(val);
+        refreshVoterChipsUI();
+      });
+    });
+
+    document.querySelectorAll('.vd-iss-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-chip');
+        if (tempIssues.has(val)) tempIssues.delete(val);
+        else tempIssues.add(val);
+        refreshVoterChipsUI();
+      });
+    });
+
+    function saveDetailedVoterSurvey() {
+      if (!activeDetailVoterId) return;
+      if (activeWorkspaceUser === 'CONSENSUS') {
+        showToast('⚠️ संयुक्त औसत मोड में बदलाव करने के लिए पहले किसी एक ID को चुनें');
+        return;
+      }
+      const mappedCat = ['A', 'B', 'C'].includes(tempVoterColorTag) ? tempVoterColorTag : 'A';
+      const patch = {
+        cat: tempVoterColorTag === 'U' ? 'C' : mappedCat,
+        colorTag: tempVoterColorTag,
+        starred: tempVoterStarred,
+        mobile: (document.getElementById('vdMobileInput').value || '').trim(),
+        timeSlot: document.getElementById('vdTimeSlotSelect').value,
+        sentToVote: document.getElementById('vdSentToVoteCheck').checked,
+        voted: document.getElementById('vdVotedCheck').checked,
+        surveyedBy: document.getElementById('vdRepresentativeSelect').value || currentLoggedInUser,
+        reward: document.getElementById('vdRewardSelect').value,
+        residence: document.getElementById('vdResidenceSelect').value,
+        dob: document.getElementById('vdDobInput').value,
+        dom: document.getElementById('vdDomInput').value,
+        caste: document.getElementById('vdCasteSelect').value,
+        occupation: document.getElementById('vdOccupationSelect').value,
+        education: (document.getElementById('vdEducationInput').value || '').trim(),
+        satisfactions: Array.from(tempSatisfactions),
+        issues: Array.from(tempIssues),
+        updatedAt: new Date().toISOString()
+      };
+
+      setVoterState(activeDetailVoterId, patch);
+      closeVoterDetailModal();
+      renderAll();
+
+      const pop = document.getElementById('saveSuccessPopup');
+      if (pop) {
+        pop.classList.remove('hidden');
+        pop.classList.add('flex');
+      }
+    }
+
+    function closeSaveSuccessPopup() {
+      const pop = document.getElementById('saveSuccessPopup');
+      pop?.classList.add('hidden');
+      pop?.classList.remove('flex');
+    }
+
+    function contactActiveVoter(channel) {
+      if (!activeDetailVoterId) return;
+      const v = voterByIdMap[activeDetailVoterId];
+      const mob = (document.getElementById('vdMobileInput').value || '').trim().replace(/\D/g, '');
+      const wObj = wardByNum[v.w] || {};
+      const slipMsg = `*ग्राम पंचायत महाराजपुरा — मतदाता पर्ची*
+नाम: *${v.n}* (${v.rt}: ${v.rn})
+वार्ड: *${v.w}* | मतदाता क्र.: *#${v.s}* | मकान: *${v.h}*
+EPIC: *${v.ep}*
+मतदान केंद्र: *${wObj.b || ''}*`;
+
+      if (channel === 'WA') {
+        const url = mob.length >= 10
+          ? `https://wa.me/91${mob.slice(-10)}?text=${encodeURIComponent(slipMsg)}`
+          : `https://wa.me/?text=${encodeURIComponent(slipMsg)}`;
+        window.open(url, '_blank');
+      } else if (channel === 'CALL') {
+        if (mob.length >= 10) window.open(`tel:${mob}`, '_self');
+        else showToast('📞 कॉल करने के लिए पहले मतदाता का मोबाइल नंबर दर्ज करें');
+      } else if (channel === 'SMS') {
+        if (mob.length >= 10) window.open(`sms:${mob}?body=${encodeURIComponent(slipMsg)}`, '_self');
+        else showToast('✉️ SMS भेजने के लिए पहले मोबाइल नंबर दर्ज करें');
+      }
+    }
+
+    // ============================================================================
+    // BLUETOOTH THERMAL PRINTER SETUP & VOTER SLIP PRINT
+    // ============================================================================
+    const PRINT_SETUP_KEY = 'maharajpura_print_setup_v1';
+
+    function getPrintSetupConfig() {
+      try {
+        const s = localStorage.getItem(PRINT_SETUP_KEY);
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return {
+        electionDate: '2026-11-15',
+        candidateName: 'ग्राम पंचायत महाराजपुरा विकास प्रत्याशी',
+        slogan: 'महाराजपुरा के सर्वांगीण विकास हेतु अपना अमूल्य मत प्रदान करें',
+        paperWidth: '58mm'
+      };
+    }
+
+    function openPrintSetupModal() {
+      const cfg = getPrintSetupConfig();
+      document.getElementById('psElectionDate').value = cfg.electionDate || '';
+      document.getElementById('psCandidate1').value = cfg.candidateName || '';
+      document.getElementById('psSlogan').value = cfg.slogan || '';
+      document.getElementById('psPaperWidth').value = cfg.paperWidth || '58mm';
+      const m = document.getElementById('printSetupModal');
+      m?.classList.remove('hidden');
+      m?.classList.add('flex');
+    }
+
+    function closePrintSetupModal() {
+      const m = document.getElementById('printSetupModal');
+      m?.classList.add('hidden');
+      m?.classList.remove('flex');
+    }
+
+    function savePrintSetupConfig() {
+      const cfg = {
+        electionDate: document.getElementById('psElectionDate').value,
+        candidateName: (document.getElementById('psCandidate1').value || '').trim(),
+        slogan: (document.getElementById('psSlogan').value || '').trim(),
+        paperWidth: document.getElementById('psPaperWidth').value || '58mm'
+      };
+      localStorage.setItem(PRINT_SETUP_KEY, JSON.stringify(cfg));
+      closePrintSetupModal();
+      showToast('🖨️ ब्लूटूथ थर्मल प्रिंटर व पर्ची सेटअप सेव हो गया!');
+    }
+
+    function quickPrintVoterSlipById(vid) {
+      activeDetailVoterId = vid;
+      printSingleVoterThermalSlip();
+    }
+
+    function printSingleVoterThermalSlip() {
+      const v = voterByIdMap[activeDetailVoterId];
+      if (!v) return;
+      const cfg = getPrintSetupConfig();
+      const wObj = wardByNum[v.w] || {};
+      const win = window.open('', '_blank', 'width=420,height=640');
+      if (!win) {
+        window.print();
+        return;
+      }
+      const isThermal = cfg.paperWidth === '58mm' || cfg.paperWidth === '80mm';
+      const maxW = cfg.paperWidth === '58mm' ? '56mm' : (cfg.paperWidth === '80mm' ? '76mm' : '140mm');
+
+      win.document.write(`<!DOCTYPE html>
+        <html lang="hi">
+        <head>
+          <meta charset="utf-8">
+          <title>मतदाता पर्ची - ${v.n}</title>
+          <style>
+            @page { margin: ${isThermal ? '2mm' : '10mm'}; }
+            body { font-family: 'Noto Sans Devanagari', sans-serif; margin: 0; padding: 6px; width: ${maxW}; color: #000; font-size: ${isThermal ? '10pt' : '11pt'}; line-height: 1.4; }
+            .slip-box { border: 2px solid #000; padding: 8px; }
+            .center { text-align: center; }
+            .divider { border-top: 1px dashed #000; margin: 6px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="slip-box">
+            <div class="center">
+              <strong>मतदाता पर्ची (VOTER SLIP)</strong><br>
+              <span>ग्राम पंचायत: महाराजपुरा (दौसा)</span><br>
+              ${cfg.electionDate ? `<small>मतदान दिनांक: ${cfg.electionDate}</small>` : ''}
+            </div>
+            <div class="divider"></div>
+            <div><strong>वार्ड संख्या: ${v.w}</strong> | <strong>क्र.सं.: #${v.s}</strong></div>
+            <div><strong>नाम: ${v.n}</strong></div>
+            <div>${v.rt}: ${v.rn}</div>
+            <div>मकान नं.: ${v.h} | आयु/लिंग: ${v.a} / ${v.g === 'M' ? 'पुरुष' : 'महिला'}</div>
+            <div><strong>EPIC: ${v.ep}</strong></div>
+            <div>मोहल्ला: ${v.mh}</div>
+            <div class="divider"></div>
+            <div><strong>मतदान केंद्र (बूथ):</strong><br>${wObj.b || ''}</div>
+            ${cfg.candidateName ? `<div class="divider"></div><div class="center"><strong>🙏 ${cfg.candidateName}</strong><br><small>${cfg.slogan || ''}</small></div>` : ''}
+          </div>
+          <script>setTimeout(() => { window.print(); }, 350);<\/script>
+        </body>
+        </html>`);
+      win.document.close();
+    }
+
+    // ============================================================================
+    // VOTER ANALYSIS REPORTS HUB (मतदाता रिपोर्ट - Korum Video 01:05)
+    // ============================================================================
+    let currentReportCategory = 'SURNAME';
+
+    function openReportCategory(catKey) {
+      currentReportCategory = catKey;
+      if (currentTab !== 'reports') {
+        switchTab('reports');
+      } else {
+        renderVoterReportsView();
+      }
+    }
+
+    function renderVoterReportsView() {
+      const out = document.getElementById('reportDynamicOutput');
+      if (!out) return;
+      const wardVal = document.getElementById('reportWardFilter')?.value || 'ALL';
+      const vtrs = wardVal === 'ALL' ? RAW_DATA.voters : RAW_DATA.voters.filter(v => String(v.w) === wardVal);
+
+      if (currentReportCategory === 'SURNAME') {
+        // Group by Surname / Caste Token
+        const groups = {
+          'मीणा / मीना (Meena)': [],
+          'बैरवा (Bairwa)': [],
+          'बलाई / बंशीवाल / वर्मा': [],
+          'पटेल / गुर्जर / अन्य': [],
+          'खाती / जांगिड़ / शर्मा': []
+        };
+        vtrs.forEach(v => {
+          const full = `${v.n} ${v.rn} ${v.mh}`;
+          if (full.includes('मीणा') || full.includes('मीना')) groups['मीणा / मीना (Meena)'].push(v);
+          else if (full.includes('बैरवा')) groups['बैरवा (Bairwa)'].push(v);
+          else if (full.includes('बलाई') || full.includes('बंशीवाल') || full.includes('बन्शीवाला') || full.includes('वर्मा')) groups['बलाई / बंशीवाल / वर्मा'].push(v);
+          else if (full.includes('खाती') || full.includes('शर्मा') || full.includes('जांगिड़')) groups['खाती / जांगिड़ / शर्मा'].push(v);
+          else groups['पटेल / गुर्जर / अन्य'].push(v);
+        });
+
+        out.innerHTML = `
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">👥 उपनाम एवं समाज/मोहल्ला बाहुल्य अनुसार मतदाता विश्लेषण (कुल: ${vtrs.length})</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            ${Object.entries(groups).map(([gName, arr]) => {
+              const pct = ((arr.length / Math.max(1, vtrs.length)) * 100).toFixed(1);
+              return `
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${gName}</div>
+                    <div class="text-[11px] text-slate-500">हिस्सेदारी: ${pct}%</div>
+                  </div>
+                  <div class="text-lg font-extrabold text-purple-800">${arr.length}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else if (currentReportCategory === 'AGE') {
+        const ageGroups = [
+          { label: '18 – 25 वर्ष (नव मतदाता / युवा)', min: 18, max: 25, list: [] },
+          { label: '26 – 40 वर्ष (सक्रिय युवा वर्ग)', min: 26, max: 40, list: [] },
+          { label: '41 – 60 वर्ष (मध्यम आयु वर्ग)', min: 41, max: 60, list: [] },
+          { label: '60+ वर्ष (वरिष्ठ नागरिक / पेंशनधारी)', min: 61, max: 200, list: [] }
+        ];
+        vtrs.forEach(v => {
+          const g = ageGroups.find(x => v.a >= x.min && v.a <= x.max);
+          if (g) g.list.push(v);
+        });
+        out.innerHTML = `
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">🎂 आयु वर्ग अनुसार मतदाता रिपोर्ट (कुल: ${vtrs.length})</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            ${ageGroups.map(g => {
+              const pct = ((g.list.length / Math.max(1, vtrs.length)) * 100).toFixed(1);
+              const mCnt = g.list.filter(x => x.g === 'M').length;
+              const fCnt = g.list.filter(x => x.g === 'F').length;
+              return `
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-extrabold text-slate-900 text-xs sm:text-sm">${g.label}</span>
+                    <span class="text-base font-extrabold text-purple-800">${g.list.length} (${pct}%)</span>
+                  </div>
+                  <div class="text-xs text-slate-600">पुरुष: <strong>${mCnt}</strong> | महिला: <strong>${fCnt}</strong></div>
+                  <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div class="h-full bg-purple-600 rounded-full" style="width:${pct}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else if (currentReportCategory === 'MOHALLA') {
+        const mohMap = {};
+        vtrs.forEach(v => {
+          const k = v.mh || 'महाराजपुरा';
+          if (!mohMap[k]) mohMap[k] = { tot: 0, m: 0, f: 0, wards: new Set() };
+          mohMap[k].tot++;
+          if (v.g === 'M') mohMap[k].m++; else mohMap[k].f++;
+          mohMap[k].wards.add(v.w);
+        });
+        out.innerHTML = `
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">📍 मोहल्ला / ढाणी पते के अनुसार मतदाता वर्गीकरण</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            ${Object.entries(mohMap).sort((a, b) => b[1].tot - a[1].tot).map(([mName, info]) => `
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+                <div>
+                  <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${mName}</div>
+                  <div class="text-[11px] text-slate-500">वार्ड: ${Array.from(info.wards).join(', ')} | पु: ${info.m}, म: ${info.f}</div>
+                </div>
+                <div class="px-3 py-1 rounded-xl bg-teal-100 text-teal-900 font-extrabold text-sm">${info.tot}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (currentReportCategory === 'COLOR') {
+        let cA = 0, cB = 0, cC = 0, cVIP = 0;
+        vtrs.forEach(v => {
+          const vst = getVoterState(v);
+          const raw = appState.voters[v.id] || {};
+          if (raw.colorTag === 'VIP') cVIP++;
+          else if (vst.cat === 'A') cA++;
+          else if (vst.cat === 'B') cB++;
+          else cC++;
+        });
+        out.innerHTML = `
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-3">🎨 रंग कोड टैगिंग अनुसार मतदाता रिपोर्ट</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300">
+              <div class="text-xs font-bold text-emerald-900">🟢 हरा (समर्थक A)</div>
+              <div class="text-2xl font-extrabold text-emerald-700 mt-1">${cA}</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-300">
+              <div class="text-xs font-bold text-rose-900">🔴 लाल (विरोधी B)</div>
+              <div class="text-2xl font-extrabold text-rose-700 mt-1">${cB}</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-300">
+              <div class="text-xs font-bold text-amber-900">🟡 पीला (अनिर्णीत C)</div>
+              <div class="text-2xl font-extrabold text-amber-700 mt-1">${cC}</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-fuchsia-50 border border-fuchsia-300">
+              <div class="text-xs font-bold text-fuchsia-900">🟣 गुलाबी (विशेष लाभार्थी)</div>
+              <div class="text-2xl font-extrabold text-fuchsia-700 mt-1">${cVIP}</div>
+            </div>
+          </div>
+        `;
+      } else if (currentReportCategory === 'CONTACT_LINK') {
+        let linked = 0;
+        vtrs.forEach(v => {
+          const mob = appState.voters[v.id]?.mobile || appState.families[v.fid]?.note || '';
+          if (mob && mob.trim().length >= 6) linked++;
+        });
+        const pct = Math.round((linked / Math.max(1, vtrs.length)) * 100);
+        out.innerHTML = `
+          <div class="space-y-4">
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">🔗 लाभार्थी एवं मोबाइल संपर्क लिंकिंग (Contact Mapping)</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
+              <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                <div class="text-xs font-bold text-slate-600">📞 लिंक किए गए संपर्क</div>
+                <div class="text-2xl font-extrabold text-blue-800 mt-1">${linked}</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+                <div class="text-xs font-bold text-slate-600">👤 कुल मतदाता</div>
+                <div class="text-2xl font-extrabold text-amber-900 mt-1">${vtrs.length}</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 col-span-2 sm:col-span-1">
+                <div class="text-xs font-bold text-slate-600">लिंकिंग प्रतिशत</div>
+                <div class="text-2xl font-extrabold text-emerald-700 mt-1">${pct}%</div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="switchTab('voters')" class="px-4 py-2.5 rounded-xl korum-btn text-xs font-extrabold">📱 मतदाता सूची में मोबाइल नंबर जोड़ें / कॉल करें</button>
+              <button type="button" onclick="document.getElementById('btnExportCSV').click()" class="px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-extrabold">📥 संपर्क CSV डाउनलोड करें</button>
+            </div>
+          </div>
+        `;
+      } else {
+        // Default: Show Booth / Ward / Alpha / Issues / Residence Summary
+        out.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">📋 वार्ड एवं मतदान केंद्र विस्तृत रिपोर्ट (${vtrs.length} मतदाता)</h3>
+            <button type="button" onclick="switchTab('printcenter')" class="px-3.5 py-1.5 rounded-xl korum-btn text-xs font-extrabold">🖨️ A4 PDF प्रिंट सेंटर खोलें</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            ${RAW_DATA.wards.map(w => `
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-purple-900">वार्ड ${w.w} (${w.vil})</span>
+                  <span class="font-extrabold text-slate-900">${w.tot} वोट</span>
+                </div>
+                <div class="text-xs text-slate-600">${w.ar}</div>
+                <div class="text-[11px] text-slate-500">${w.b}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    document.getElementById('reportWardFilter')?.addEventListener('change', renderVoterReportsView);
+
+    // ============================================================================
+    // WAR ROOM & LIVE POLLING MONITORING (वार रूम - Korum Video 01:13-01:16)
+    // ============================================================================
+    function renderWarRoomView() {
+      const wardVal = document.getElementById('warRoomWardSelect')?.value || 'ALL';
+      const boothVal = document.getElementById('warRoomBoothSelect')?.value || 'ALL';
+
+      const allowedWards = new Set();
+      RAW_DATA.wards.forEach(w => {
+        if (wardVal !== 'ALL' && String(w.w) !== wardVal) return;
+        if (boothVal !== 'ALL' && !w.b.startsWith(boothVal)) return;
+        allowedWards.add(w.w);
+      });
+
+      const vtrs = RAW_DATA.voters.filter(v => allowedWards.has(v.w));
+      const fams = RAW_DATA.families.filter(f => allowedWards.has(f.w));
+
+      let sentCnt = 0, votedCnt = 0, rewardTot = 0, rewardVoted = 0, rewardSent = 0;
+      vtrs.forEach(v => {
+        const vst = getVoterState(v);
+        const raw = appState.voters[v.id] || {};
+        if (raw.sentToVote) sentCnt++;
+        if (vst.voted) votedCnt++;
+        if (raw.reward || raw.colorTag === 'VIP') {
+          rewardTot++;
+          if (vst.voted) rewardVoted++;
+          if (raw.sentToVote) rewardSent++;
+        }
+      });
+
+      const pendingCnt = Math.max(0, vtrs.length - votedCnt);
+      const pct = ((votedCnt / Math.max(1, vtrs.length)) * 100).toFixed(1);
+
+      document.getElementById('warSentCount').textContent = sentCnt.toLocaleString('hi-IN');
+      document.getElementById('warVotedCount').textContent = votedCnt.toLocaleString('hi-IN');
+      document.getElementById('warPendingCount').textContent = pendingCnt.toLocaleString('hi-IN');
+      document.getElementById('warTurnoutPct').textContent = `${pct}%`;
+
+      document.getElementById('warTotVoters').textContent = vtrs.length.toLocaleString('hi-IN');
+      document.getElementById('warMaleVoters').textContent = vtrs.filter(x => x.g === 'M').length.toLocaleString('hi-IN');
+      document.getElementById('warFemaleVoters').textContent = vtrs.filter(x => x.g === 'F').length.toLocaleString('hi-IN');
+      document.getElementById('warFamCount').textContent = fams.length.toLocaleString('hi-IN');
+
+      document.getElementById('warRewardTotal').textContent = rewardTot;
+      document.getElementById('warRewardVoted').textContent = rewardVoted;
+      document.getElementById('warRewardPending').textContent = Math.max(0, rewardTot - rewardVoted);
+      document.getElementById('warRewardSent').textContent = rewardSent;
+
+      // Representative / Surveyor Grid
+      const repGrid = document.getElementById('warRepProgressGrid');
+      if (repGrid) {
+        repGrid.innerHTML = ALL_USER_IDS.slice(0, 9).map(uid => {
+          const acc = multiDB.accounts[uid] || {};
+          const st = computeUserSummaryStats(uid);
+          const handle = acc.username || uid;
+          return `
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-xs font-extrabold text-slate-800 truncate">${handle}</div>
+              <div class="text-sm font-extrabold text-emerald-700 mt-0.5">${st.surveyedFams} घर / ${st.totalVoted} वोट</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Age-Group Turnout Breakdown
+      const ageBands = [
+        { label: '18-30 युवा', min: 18, max: 30 },
+        { label: '31-45 मध्यम', min: 31, max: 45 },
+        { label: '46-60 वरिष्ठ', min: 46, max: 60 },
+        { label: '60+ बुजुर्ग', min: 61, max: 200 }
+      ];
+      const ageEl = document.getElementById('warAgeBreakdown');
+      if (ageEl) {
+        ageEl.innerHTML = ageBands.map(b => {
+          const sub = vtrs.filter(v => v.a >= b.min && v.a <= b.max);
+          const vSub = sub.filter(v => getVoterState(v).voted).length;
+          const bPct = ((vSub / Math.max(1, sub.length)) * 100).toFixed(0);
+          return `
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-700 w-28">${b.label}</span>
+              <div class="flex-1 mx-2 h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div class="h-full bg-emerald-600 rounded-full" style="width:${bPct}%"></div>
+              </div>
+              <span class="font-extrabold text-slate-900">${vSub}/${sub.length} (${bPct}%)</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function filterVotersFromWarRoom(castStatus) {
+      const wardVal = document.getElementById('warRoomWardSelect')?.value || 'ALL';
+      document.getElementById('voterWardSelect').value = wardVal;
+      if (castStatus === 'CAST' || castStatus === 'PENDING') {
+        document.getElementById('voterCastSelect').value = castStatus;
+      } else {
+        document.getElementById('voterCastSelect').value = 'ALL';
+      }
+      currentVoterPage = 1;
+      switchTab('voters');
+    }
+
+    document.getElementById('warRoomWardSelect')?.addEventListener('change', renderWarRoomView);
+    document.getElementById('warRoomBoothSelect')?.addEventListener('change', renderWarRoomView);
+
+    // ============================================================================
+    // TEAM MANAGEMENT & WHATSAPP BROADCAST (मेरी टीम - Korum Video 00:52-01:02)
+    // ============================================================================
+    const TEAM_STORAGE_KEY = 'maharajpura_team_members_v1';
+
+    function getTeamMembersList() {
+      try {
+        const saved = localStorage.getItem(TEAM_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      // Default seeded team from our 10 Surveyors + Admin
+      return ALL_USER_IDS.map((uid, idx) => {
+        const acc = multiDB.accounts[uid] || {};
+        return {
+          id: uid,
+          name: acc.name || uid,
+          role: uid === 'ADMIN' ? 'उच्च प्राधिकारी' : (idx <= 3 ? 'वार्ड प्रभारी' : (idx <= 6 ? 'सर्वेयर' : 'पोलिंग एजेंट')),
+          mobile: '',
+          gender: 'M',
+          ward: idx === 0 ? 'ALL' : String(((idx - 1) % 9) + 1),
+          booth: idx % 3 === 1 ? '68' : (idx % 3 === 2 ? '69' : '70'),
+          linkedAccount: uid
+        };
+      });
+    }
+
+    function saveTeamMembersList(list) {
+      localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function renderTeamManagementView() {
+      const list = getTeamMembersList();
+      const roles = ['उच्च प्राधिकारी', 'एडमिन मैनेजर', 'वार्ड प्रभारी', 'यादीभाग प्रमुख', 'सर्वेयर', 'पोलिंग एजेंट', 'स्वयंसेवक'];
+      const roleGrid = document.getElementById('teamRoleCountGrid');
+      if (roleGrid) {
+        roleGrid.innerHTML = roles.map(r => {
+          const cnt = list.filter(m => m.role === r).length;
+          return `
+            <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-600 truncate">${r}</div>
+              <div class="text-base font-extrabold text-purple-900 mt-0.5">(${cnt})</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      const grid = document.getElementById('teamMembersGrid');
+      if (grid) {
+        grid.innerHTML = list.map((m, idx) => {
+          const st = m.linkedAccount ? computeUserSummaryStats(m.linkedAccount) : { surveyedFams: 0, totalOur: 0 };
+          return `
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="text-base font-extrabold text-slate-900">${m.name}</div>
+                  <div class="text-xs font-mono font-bold text-slate-600 mt-0.5">${m.mobile || 'मोबाइल नं. जोड़ा नहीं गया'}</div>
+                  <div class="text-xs font-semibold text-purple-800 mt-0.5">आवंटित वार्ड क्रमांक : ${m.ward} | बूथ : ${m.booth}</div>
+                </div>
+                <div class="flex flex-col items-end gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="contactTeamMember(${idx}, 'WA')" class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold" title="WhatsApp">💬</button>
+                    <button type="button" onclick="contactTeamMember(${idx}, 'CALL')" class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold" title="Call">📞</button>
+                  </div>
+                  <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 text-[11px] font-extrabold">${m.role}</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <div class="text-slate-500 font-semibold">सर्वे किए गए परिवार</div>
+                  <div class="text-base font-extrabold text-slate-900 mt-0.5">${st.surveyedFams}</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div class="text-emerald-800 font-semibold">चिन्हित समर्थक वोट</div>
+                  <div class="text-base font-extrabold text-emerald-800 mt-0.5">${st.totalOur}</div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onclick="removeTeamMember(${idx})" class="py-2 rounded-xl bg-rose-200/80 hover:bg-rose-300 text-rose-950 font-extrabold text-xs transition">हटाएं</button>
+                <button type="button" onclick="cycleTeamMemberRole(${idx})" class="py-2 rounded-xl korum-btn font-extrabold text-xs transition">भूमिका बदलें</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openAddTeamMemberModal() {
+      const m = document.getElementById('addTeamModal');
+      m?.classList.remove('hidden');
+      m?.classList.add('flex');
+    }
+
+    function closeAddTeamMemberModal() {
+      const m = document.getElementById('addTeamModal');
+      m?.classList.add('hidden');
+      m?.classList.remove('flex');
+    }
+
+    function saveNewTeamMember() {
+      const fName = (document.getElementById('tmFirstName').value || '').trim();
+      const lName = (document.getElementById('tmLastName').value || '').trim();
+      const mob = (document.getElementById('tmMobileInput').value || '').trim();
+      const roleEl = document.querySelector('input[name="tmRole"]:checked');
+      const genderEl = document.querySelector('input[name="tmGender"]:checked');
+      const ward = document.getElementById('tmWardSelect').value;
+      const booth = document.getElementById('tmBoothSelect').value;
+
+      if (!fName) {
+        showToast('❌ कृपया टीम सदस्य का नाम दर्ज करें');
+        return;
+      }
+
+      const list = getTeamMembersList();
+      list.unshift({
+        id: 'TM' + Date.now(),
+        name: `${fName} ${lName}`.trim(),
+        role: roleEl ? roleEl.value : 'सर्वेयर',
+        mobile: mob,
+        gender: genderEl ? genderEl.value : 'M',
+        ward,
+        booth,
+        linkedAccount: null
+      });
+      saveTeamMembersList(list);
+      document.getElementById('tmFirstName').value = '';
+      document.getElementById('tmLastName').value = '';
+      document.getElementById('tmMobileInput').value = '';
+      closeAddTeamMemberModal();
+      renderTeamManagementView();
+      showToast('✅ नया टीम सदस्य सफलतापूर्वक जोड़ा गया!');
+    }
+
+    function removeTeamMember(idx) {
+      const list = getTeamMembersList();
+      list.splice(idx, 1);
+      saveTeamMembersList(list);
+      renderTeamManagementView();
+      showToast('🗑️ टीम सदस्य हटाया गया');
+    }
+
+    function cycleTeamMemberRole(idx) {
+      const roles = ['उच्च प्राधिकारी', 'एडमिन मैनेजर', 'वार्ड प्रभारी', 'यादीभाग प्रमुख', 'सर्वेयर', 'पोलिंग एजेंट', 'स्वयंसेवक'];
+      const list = getTeamMembersList();
+      if (!list[idx]) return;
+      const curIdx = roles.indexOf(list[idx].role);
+      list[idx].role = roles[(curIdx + 1) % roles.length];
+      saveTeamMembersList(list);
+      renderTeamManagementView();
+      showToast(`✅ भूमिका बदलकर "${list[idx].role}" कर दी गई`);
+    }
+
+    function contactTeamMember(idx, mode) {
+      const list = getTeamMembersList();
+      const m = list[idx];
+      if (!m) return;
+      const mob = (m.mobile || '').replace(/\D/g, '');
+      const msg = `*ग्राम पंचायत महाराजपुरा चुनाव टीम अपडेट*
+नमस्ते ${m.name} जी (${m.role}, वार्ड ${m.ward}), कृपया अपने क्षेत्र के सर्वे व मतदान की लाइव रिपोर्ट अपडेट करें।`;
+      if (mode === 'WA') {
+        const url = mob.length >= 10 ? `https://wa.me/91${mob.slice(-10)}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+      } else if (mode === 'CALL') {
+        if (mob.length >= 10) window.open(`tel:${mob}`, '_self');
+        else showToast('📞 इस सदस्य का मोबाइल नंबर दर्ज नहीं है');
+      }
+    }
+
+    // WhatsApp Broadcast Modal Handlers
+    function openBroadcastModal() {
+      const m = document.getElementById('broadcastModal');
+      m?.classList.remove('hidden');
+      m?.classList.add('flex');
+    }
+
+    function closeBroadcastModal() {
+      const m = document.getElementById('broadcastModal');
+      m?.classList.add('hidden');
+      m?.classList.remove('flex');
+    }
+
+    function applyBroadcastTemplate() {
+      const t = document.getElementById('bcTemplateSelect').value;
+      const box = document.getElementById('bcMessageText');
+      if (t === 'APPEAL') {
+        box.value = `राम-राम सा! 🙏
+ग्राम पंचायत महाराजपुरा के सर्वांगीण विकास, पक्की सड़क, पेयजल एवं पारदर्शी व्यवस्था के लिए आगामी पंचायत चुनाव में अपना अमूल्य आशीर्वाद एवं समर्थन प्रदान करें।
+— ग्राम पंचायत महाराजपुरा विकास टीम`;
+      } else if (t === 'POLLDAY') {
+        box.value = `🗳️ *मतदान दिवस विशेष अपील — ग्राम पंचायत महाराजपुरा*
+लोकतंत्र के इस पावन पर्व पर आज सुबह समय पर मतदान केंद्र पहुँचकर अपना वोट अवश्य डालें।`;
+      } else if (t === 'MEETING') {
+        box.value = `🤝 *ग्राम चौपाल एवं कार्यकर्ता बैठक निमंत्रण*
+ग्राम पंचायत महाराजपुरा के सभी सम्मानित मतदाताओं एवं कार्यकर्ताओं की विशेष बैठक में आप सादर आमंत्रित हैं।`;
+      } else {
+        box.value = `🎉 *हार्दिक शुभकामनाएं!*
+आपको एवं आपके पूरे परिवार को ग्राम पंचायत महाराजपुरा परिवार की ओर से हार्दिक शुभकामनाएं एवं मंगलकामनाएं।`;
+      }
+    }
+
+    function copyBroadcastMessage() {
+      const txt = document.getElementById('bcMessageText').value;
+      navigator.clipboard?.writeText(txt);
+      showToast('📋 ब्रॉडकास्ट संदेश कॉपी हो गया!');
+    }
+
+    function launchWhatsappBroadcast() {
+      const txt = document.getElementById('bcMessageText').value;
+      window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
     function renderAll() {
       updateKPIs();
+      renderHomeDashboard();
       renderFamilies();
       if (currentTab === 'voters') renderVoters();
       if (currentTab === 'dashboard') renderDashboard();
       if (currentTab === 'admin') renderAdminControlView();
       if (currentTab === 'printcenter') renderPrintCenter();
+      if (currentTab === 'reports') renderVoterReportsView();
+      if (currentTab === 'warroom') renderWarRoomView();
+      if (currentTab === 'team') renderTeamManagementView();
     }
 
     // Boot Application
